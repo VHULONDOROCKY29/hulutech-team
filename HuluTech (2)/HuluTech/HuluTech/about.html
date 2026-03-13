@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us | HULUTECH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js/main.js"></script>
+   <link rel="stylesheet" href="css/privacy.css">
+
+<script src="js/privacy.js" defer></script>
+    <style>
+        /* --- NAVIGATION & DROPDOWN --- */
+        .dropdown:hover .dropdown-content { display: block !important; }
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none; 
+            position: absolute;
+            background-color: transparent; 
+            min-width: 220px;
+            z-index: 1000;
+            top: 40%; 
+            left: 0;
+        }
+        .dropdown-content a {
+            color: white !important;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            background: none !important;
+            transition: color 0.3s ease;
+        }
+        .dropdown-content a:first-child { padding-bottom: 40px; }
+        .dropdown-content a:last-child { padding-top: 0px; margin-top: -5px; }
+        .dropdown-content a:hover { color: #E1AD01 !important; }
+        #nav-links { display: flex; align-items: center; }
+
+        /* --- OUR STORY TAB: THE ONLY ONE WITH THE IMAGE --- */
+        #story-tab {
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(2, 6, 23, 0.85), rgba(2, 6, 23, 0.85)), 
+                              url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- LEADERSHIP TEAM TAB: SOLID DARK BACKGROUND ONLY --- */
+        #team-tab {
+            min-height: 100vh;
+            background-color: #020617; /* Solid Navy/Black - No Image */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+        }
+
+        /* General Section Reset */
+        .about-hero, .content-section, .values-section, .team-section {
+            background: transparent !important;
+            border-bottom: none !important;
+            width: 100%;
+        }
+
+        .about-hero, .team-section {
+            padding: 140px 8% 60px;
+        }
+
+        /* Glassmorphism Cards (Applied to Story items) */
+        .info-card, .value-item {
+            background: rgba(15, 23, 42, 0.7) !important;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(225, 173, 1, 0.2);
+            margin-bottom: 20px;
+        }
+
+        /* Team Cards (Solid style for the solid background) */
+        .team-card {
+            background: #0f172a !important; 
+            border: 1px solid #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: #E1AD01;
+        }
+        /* --- UPDATED CARD STYLES WITH MUSTARD BOTTOM LINE --- */
+.info-card, .value-item, .team-card {
+    background: rgba(15, 23, 42, 0.7) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle side/top borders */
+    border-bottom: 5px solid #E1AD01; /* The thick mustard line */
+    margin-bottom: 20px;
+    border-radius: 12px; /* Smooth corners */
+    overflow: hidden; /* Ensures the bottom line stays within the radius */
+    padding: 30px;
+    transition: transform 0.3s ease, border-bottom-width 0.3s ease;
+}
+
+/* Specific styling for the Mission/Vision cards to match layout */
+.content-section {
+    display: flex;
+    gap: 20px;
+    padding: 0 8%;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Hover effect to make it feel more interactive */
+.info-card:hover, .value-item:hover, .team-card:hover {
+    transform: translateY(-5px);
+    border-bottom-width: 8px; /* Slight thickening on hover */
+}
+
+/* Ensure Team Cards still look good on the solid background */
+#team-tab .team-card {
+    background: #0f172a !important;
+}
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="logo">
+        <a href="index.html">
+            <img src="images/Logo-Hulu.jpg" alt="HULUTECH Logo">
+        </a>
+    </div>
+    <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+    </div>
+    <nav id="nav-links">
+        <a href="index.html">Home</a>
+        
+       <!-- <div class="dropdown">
+          <a href="about.html" class="dropbtn">About <i class="fas fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="about.html?tab=story">Our Story</a>
+                <a href="about.html?tab=team">Leadership Team</a>
+            </div>-->
+        </div>
+          <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="Career.html">Careers</a>
+        <a href="Partnership.html">Partnerships</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<main class="about-page-content">
+    
+    <div id="story-tab" class="about-tab-content">
+        <section class="about-hero">
+            <div class="hero-inner">
+                <h1>OUR STORY</h1>
+                <p class="hero-tagline">Empowering African Businesses Through secure and Intelligent Technology</p>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="info-card">
+                <h2>OUR MISSION</h2>
+                <p>Hulutech is a trusted technology and managed services partner that enables organisations to innovate securely, harness the power of data, and accelerate digital transformation through leading cybersecurity, Artificial intelligence (AI), and cloud solutions. We partner with our clients to optimise operations and deliver measurable value aligned to their business objectives.</p>
+            </div>
+            <div class="info-card">
+                <h2>OUR VISION</h2>
+                <p>To be a leading African technology and managed services partner recognised for enabling secure digital transformation, building resilient organisations, and delivering lasting business impact.</p>
+            </div>
+        </section>
+
+        <section class="values-section">
+            <h2 class="section-heading">VALUES</h2>
+            <p>Our culture is built on innovation, Credibility, Trust, Integrity, and Collaboration.</p>
+            <div class="values-grid">
+                <div class="value-item"><i class="fas fa-lightbulb"></i><h3>Innovation</h3><p>Encouraging creative thinking and embracing emerging technologies.</p></div>
+                <div class="value-item"><i class="fas fa-certificate"></i><h3>Credibility</h3><p>Maintaining strong ethical standards and professionalism.</p></div>
+                <div class="value-item"><i class="fas fa-user-shield"></i><h3>Trust</h3><p>Committed to delivering excellence and customer satisfaction.</p></div>
+                <div class="value-item"><i class="fas fa-handshake"></i><h3>Integrity</h3><p>Operating with honesty and transparency in every partnership.</p></div>
+                <div class="value-item"><i class="fas fa-users-cog"></i><h3>Collaboration</h3><p>Fostering an environment where teamwork drives success.</p></div>
+            </div>
+        </section>
+    </div>
+
+    <div id="team-tab" class="about-tab-content" style="display:none;">
+        <section class="team-section">
+            <div class="team-header">
+                <h2 class="section-heading">THE VISIONARIES</h2>
+            
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="image-wrapper">
+                        <img src="images/CEO.JPG" alt="Khutso Chabalala">
+                    </div>
+                    <div class="team-info">
+                        <h3>KHUTSO CHABALALA</h3>
+                        <p class="role">Chief Executive Officer</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="image-wrapper">
+                        <img src="images/lesego.png" alt="Lesego">
+                    </div>
+                    <div class="team-info">
+                        <h3>LESEGO LUBISI</h3>
+                        <p class="role">Chief Operating Officer</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="image-wrapper">
+                        <img src="images/tech-lead.jpg" alt="Interns">
+                    </div>
+                    <div class="team-info">
+                        <h3>TECHNICAL LEAD</h3>
+                        <p class="role">TECHNOLOGY OFFICER</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-col brand-col">
+            <h2 class="footer-logo">Connect</h2>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">Our Story</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="Career.html">Career</a></li>
+                <li><a href="index.html#newsfeed">Latest News</a></li>
+                <li><a href="contact.html">Get In Touch</a></li>
+                <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+                
+                
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <div class="contact-details">
+                <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
+                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
+    </div>
+<script>
+    function showTab(tabId) {
+        const tabs = document.getElementsByClassName('about-tab-content');
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].style.display = 'none';
+        }
+        const target = document.getElementById(tabId);
+        if(target) target.style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        if (tab === 'team') {
+            showTab('team-tab');
+        } else {
+            showTab('story-tab');
+        }
+    });
+</script>
+
+</body>
+</html>

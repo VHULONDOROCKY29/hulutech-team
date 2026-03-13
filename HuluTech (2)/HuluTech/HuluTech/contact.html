@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us | HULUTECH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+     <link rel="stylesheet" href="css/privacy.css">
+
+<script src="js/privacy.js" defer></script>
+
+    <style>
+        /* --- NAVIGATION DROPDOWN FIX --- */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block !important;
+        }
+
+        .dropdown-content {
+            display: none; 
+            position: absolute;
+            background-color: transparent; 
+            min-width: 220px;
+            z-index: 1000;
+            top: 25%; 
+            left: 0;
+        }
+
+        .dropdown-content a {
+            text-decoration: none;
+            display: block !important;
+            font-size: 16px !important;
+            margin-left: 0 !important;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-weight: 700 !important;
+        }
+
+        .dropdown-content a:first-child {
+            color: #ffffff !important;
+            padding-bottom: 25px !important; 
+        }
+
+        .dropdown-content a:last-child {
+            color: #0a0e1a !important; 
+            padding-top: 0px !important; 
+            margin-top: -5px !important;
+        }
+
+        .dropdown-content a:hover {
+            color: #FFB800 !important;
+        }
+
+        #nav-links {
+            display: flex;
+            align-items: center;
+            overflow: visible !important;
+        }
+
+       .contact-hero-centered {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center; /* This pulls the card to the exact middle */
+    align-items: center;
+    min-height: 80vh;
+}
+.contact-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto; /* Keeps it centered as the starting point */
+    
+    /* CHANGE THIS LINE TO A NEGATIVE NUMBER */
+    transform: translateX(-80px); 
+}@media (max-width: 850px) {
+    .contact-wrapper { 
+        transform: translateX(0); /* Resets the nudge so it centers on mobile */
+        margin: 0 auto; 
+    }
+    .contact-main-card { grid-template-columns: 1fr; }
+}
+        .contact-main-card {
+            display: grid;
+            grid-template-columns: 38% 62%;
+            background: #0a0e1a;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-details-panel {
+            padding: 40px; 
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .contact-form-panel {
+            padding: 30px;
+            background: #111827;
+        }
+
+        /* Status Message Styling */
+        .status-message {
+            padding: 12px; margin-bottom: 20px; border-radius: 8px;
+            display: none; font-size: 14px; font-weight: 600; text-align: center;
+        }
+        .status-success { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid #22c55e; display: block; }
+        .status-error { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; display: block; }
+
+        /* Info Blocks */
+        .info-block {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background: none !important;
+            border: none !important;
+        }
+
+        .info-block i {
+            color: #FFB800 !important;
+            font-size: 24px !important;
+            margin-right: 15px;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .info-block div span {
+            display: block;
+            color: #FFB800;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .info-block div p {
+            color: #FFB800;
+            margin: 0;
+            font-size: 15px;
+        }
+
+        /* Phone Input Styling */
+        .iti { width: 100%; margin-bottom: 25px; }
+        #phone {
+            width: 100% !important;
+            background: transparent !important;
+            border: none !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            padding: 12px 12px 12px 100px !important; 
+            font-size: 16px;
+            border-radius: 0;
+        }
+        #phone:focus { outline: none; border-bottom-color: #FFB800 !important; }
+
+        @media (max-width: 850px) {
+            .contact-main-card { grid-template-columns: 1fr; }
+            .contact-details-panel, .contact-form-panel { padding: 30px; }
+        }
+        /* --- FULL WIDTH MUSTARD LINE WITH CORNER CURVES --- */
+.info-card, .value-item, .glass-card, .contact-main-card, .featured-iot {
+    position: relative;
+    overflow: hidden; /* Critical to clip the line to your container's radius */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.info-card::before, 
+.value-item::before, 
+.glass-card::before, 
+.contact-main-card::before, 
+.featured-iot::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Spans both sides entirely */
+    height: 8px; /* Thickness of the line */
+    background-color: #FFB800; /* Mustard Yellow from your design */
+    
+    /* Matches the container's bottom corner radius on both sides */
+    /* This makes both sides even and curved */
+    border-radius: 0 0 20px 20px; 
+    
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Ensure the Featured IoT banner has a slightly thicker line for its size */
+.featured-iot::before {
+    height: 10px;
+}
+        
+    </style>
+</head>
+<body class="contact-page-body">
+
+<header class="site-header">
+   <div class="logo">
+    <a href="index.html"><img src="images/Logo-Hulu.jpg" alt="HULUTECH Logo"></a>
+</div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  <nav id="nav-links">
+        <a href="index.html">Home</a>
+        
+      <!-- <div class="dropdown">
+          <a href="about.html" class="dropbtn">About <i class="fas fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="about.html?tab=story">Our Story</a>
+                <a href="about.html?tab=team">Leadership Team</a>
+            </div>-->
+        </div>
+          <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="Career.html">Careers</a>
+        <a href="Partnership.html">Partnerships</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<main class="contact-hero-centered">
+    <div class="contact-wrapper">
+        <header class="contact-header" style="text-align: center; margin-bottom: 40px;">
+           <h1 style="color: #FFB800 !important; font-size: 2.5rem; margin-top: 20px;">
+                Let’s build the <br>
+                <span style="color: #FFB800;">Future together.</span>
+            </h1>
+        </header>
+
+        <div class="contact-main-card">
+            <aside class="contact-details-panel">
+                <h3 style="color: #FFB800; margin-bottom: 30px; font-size: 1.2rem;">Contact Info</h3>
+                <div class="info-bubble-container">
+                    <div class="info-block">
+                        <i class="fas fa-envelope"></i>
+                        <div><span>Email Us</span><p>info@hulutech.co.za</p></div>
+                    </div>
+                    <div class="info-block">
+                        <i class="fas fa-phone"></i>
+                        <div><span>Direct Line</span><p>+27 61 587-0933</p></div>
+                    </div>
+                    <div class="info-block">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div><span>Visit HQ</span><p>Midrand, SA</p></div>
+                    </div>
+                    <div class="info-block">
+                        <i class="fas fa-clock"></i>
+                        <div><span>Hours</span><p>Mon-Fri: 08:00-17:00</p></div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="contact-form-panel">
+                <div id="status-message" class="status-message"></div>
+                <form id="contact-form">
+                    <input type="hidden" name="access_key" value="3ad99661-0eb3-44d9-b711-f4f582978489">
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <input type="text" name="name" placeholder="Full Name" required 
+                               style="width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white;">
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <input type="email" name="email" placeholder="Email Address" required 
+                               style="width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white;">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="tel" id="phone" required>
+                        <input type="hidden" name="phone_full" id="phone_full">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 30px;">
+                        <textarea name="message" id="message" rows="3" placeholder="Tell us about your project..." required 
+                                  style="width: 100%; padding: 12px; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white;"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn"
+                            style="width: 100%; padding: 15px; background: #FFB800; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; color: #0a0e1a;">
+                        SEND MESSAGE
+                    </button>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>
+
+<section class="map-section-full">
+    <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3584.603373507519!2d28.1130613!3d-26.0125881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1e9573f000000001%3A0x0!2zMjbCsDAwJzQ1LjMiUyAyOMKwMDYnNDcuMCJF!5e0!3m2!1sen!2sza!4v1700000000000!5m2!1sen!2sza" 
+        width="100%" height="400" style="border:0; filter: grayscale(1) invert(0.9) brightness(0.8); display: block;" allowfullscreen="" loading="lazy">
+    </iframe>
+</section>
+
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-col brand-col">
+            <h2 class="footer-logo">Connect</h2>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/company/hulutech" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/27765718894" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">Our Story</a></li>
+                <li><a href="services.html">Services</a></li>
+                  <a href="Career.html">Career</a>
+                  <li><a href="index.html#newsfeed">Latest News</a></li>
+                <li><a href="contact.html">Get In Touch</a></li>
+                <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+       
+               <div class="contact-details">
+                <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
+                <p><i class="fas fa-phone"></i>+27 61 587-0933</p>
+                <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
+             <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 HULUTECH | All Rights Reserved</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+<script>
+    const form = document.getElementById('contact-form');
+    const statusMsg = document.getElementById('status-message');
+    const submitBtn = document.getElementById('submitBtn');
+    const phoneInput = document.querySelector("#phone");
+    const phoneFullField = document.querySelector("#phone_full");
+
+    const iti = window.intlTelInput(phoneInput, {
+        initialCountry: "za",
+        separateDialCode: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+    });
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!iti.isValidNumber()) {
+            statusMsg.className = "status-message status-error";
+            statusMsg.innerHTML = "Invalid phone number.";
+            statusMsg.style.display = "block";
+            return;
+        }
+        submitBtn.disabled = true;
+        phoneFullField.value = iti.getNumber();
+
+        const formData = new FormData(form);
+        const object = Object.fromEntries(formData);
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(object)
+        })
+        .then(async (response) => {
+            if (response.status == 200) {
+                statusMsg.className = "status-message status-success";
+                statusMsg.innerHTML = "Sent Successfully!";
+                form.reset();
+            }
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            statusMsg.style.display = "block";
+        });
+    });
+
+    document.getElementById('hamburger').onclick = function() {
+        document.getElementById('nav-links').classList.toggle('active');
+    };
+</script>
+</body>
+</html>

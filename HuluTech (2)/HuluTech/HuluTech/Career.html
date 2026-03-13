@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Careers | HULUTECH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="css/privacy.css">
+
+<script src="js/privacy.js" defer></script>
+    <style>
+        /* --- YOUR ORIGINAL CSS FIXES --- */
+        .social-icons a i {
+            color: #FFB800 !important;
+        }
+
+        .social-icons a:hover i {
+            color: #FFD700 !important;
+            text-shadow: 0 0 8px rgba(255, 184, 0, 0.4);
+        }
+
+        :root {
+            --navy-dark: #050b18; 
+            --mustard-yellow: #e1ad01;
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--navy-dark);
+            color: var(--white);
+            font-family: Arial, sans-serif;
+        }
+
+        /* ── NAVBAR & DROPDOWN LOGIC ── */
+        .site-header {
+            background-color: var(--navy-dark);
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* border-bottom: 2px solid var(--mustard-yellow); */
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo img { height: 50px; }
+
+        nav#nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        nav#nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        nav#nav-links a:hover { color: var(--mustard-yellow); }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block !important;
+        }
+
+        .dropdown-content {
+            display: none; 
+            position: absolute;
+            background-color: transparent; 
+            min-width: 200px;
+            z-index: 1000;
+            top: 40%; 
+            left: 30px;
+        }
+
+        .dropdown-content a {
+            color: white !important;
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
+            margin-left: 0 !important;
+            background: none !important;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-content a:first-child {
+            padding-bottom: 40px; 
+            margin-top: 15px;
+        }
+
+        .dropdown-content a:last-child {
+            padding-top: 0px; 
+            margin-top: -5px;
+        }
+
+        .dropdown-content a:hover {
+            color: var(--mustard-yellow) !important; 
+        }
+
+        /* ── CAREERS SECTION ── */
+        #careers {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .careers-content h2 {
+            font-size: 3rem;
+            color: var(--mustard-yellow);
+            margin-bottom: 20px;
+        }
+
+        .job-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        .job-card {
+            background: var(--glass);
+            border: 1px solid rgba(225, 173, 1, 0.2);
+            padding: 40px 25px;
+            border-radius: 15px;
+            text-align: left;
+            transition: 0.4s;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .job-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--mustard-yellow);
+            background: rgba(225, 173, 1, 0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .job-card h3 { color: var(--mustard-yellow); margin-bottom: 10px; }
+        .job-meta { font-size: 0.8rem; color: #888; margin-bottom: 20px; text-transform: uppercase; }
+
+        /* --- UPDATED BUTTON GROUP --- */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .apply-btn {
+            background: var(--mustard-yellow);
+            color: var(--navy-dark);
+            border: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .details-btn {
+            background: transparent;
+            color: var(--mustard-yellow);
+            border: 1px solid var(--mustard-yellow);
+            padding: 12px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.3s;
+        }
+        
+        .details-btn:hover {
+            background: rgba(225, 173, 1, 0.1);
+        }
+
+        /* --- NEW: JOB DESCRIPTION MODAL CSS --- */
+        .details-body h4 { 
+            color: var(--mustard-yellow); 
+            margin: 20px 0 10px; 
+            text-transform: uppercase; 
+            font-size: 0.85rem; 
+            border-bottom: 1px solid rgba(225, 173, 1, 0.2); 
+            display: inline-block;
+        }
+        .details-body ul { padding-left: 20px; color: #ccc; }
+        .details-body li { margin-bottom: 8px; font-size: 0.95rem; }
+
+        /* --- NEW: CV UPLOAD STYLING --- */
+        .cv-upload-input {
+            border: 1px dashed var(--mustard-yellow) !important;
+            padding: 8px !important;
+            background: rgba(225, 173, 1, 0.05) !important;
+            cursor: pointer;
+        }
+        .cv-upload-input::-webkit-file-upload-button {
+            background: var(--mustard-yellow);
+            border: none;
+            border-radius: 3px;
+            color: var(--navy-dark);
+            font-weight: bold;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        /* ── MODAL STYLES ── */
+        .hulu-modal {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .hulu-modal-content {
+            background: #0a1428;
+            border: 2px solid var(--mustard-yellow);
+            padding: 35px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 550px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 24px; cursor: pointer; color: var(--mustard-yellow); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; color: var(--mustard-yellow); font-size: 0.9rem; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box;
+        }
+        .submit-app-btn {
+            width: 100%; background: var(--mustard-yellow); border: none; padding: 12px; font-weight: bold; cursor: pointer; border-radius: 5px; color: var(--navy-dark);
+        }
+
+        /* ── FOOTER ── */
+        .main-footer {
+            background-color: #00051a !important;
+            padding: 60px 10% 20px;
+            border-top: none !important; 
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            padding-bottom: 40px;
+        }
+
+        .footer-col h2 {
+            color: var(--mustard-yellow);
+            font-size: 28px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-col h2::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 30px;
+            height: 2px;
+            background-color: var(--mustard-yellow);
+        }
+
+        .footer-col h3 {
+            color: var(--mustard-yellow);
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-transform: capitalize;
+            position: relative;
+            display: inline-block;
+        }
+
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 30px;
+            height: 2px;
+            background-color: var(--mustard-yellow);
+        }
+
+        .footer-links-list { list-style: none; padding: 0; margin-top: 10px; }
+        .footer-links-list li { margin-bottom: 12px; }
+        .footer-links-list a { color: var(--white); text-decoration: none; font-size: 14px; opacity: 0.8; }
+        .footer-links-list a:hover { opacity: 1; color: var(--mustard-yellow); }
+
+        .contact-details p { font-size: 14px; margin-bottom: 15px; display: flex; align-items: center; opacity: 0.9; }
+        .contact-details i { color: var(--mustard-yellow); margin-right: 12px; font-size: 16px; }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); 
+            font-size: 12px;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+        /* Contact Details */
+.contact-details p {
+    font-size: 0.95rem;
+    margin-bottom: 15px !important;
+    display: flex;
+    align-items: center;
+    color: var(--white) !important;
+}
+
+.contact-details i {
+    color: var(--mustard-yellow) !important;
+    margin-right: 12px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Social Icons (Mustard Yellow) */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a i {
+    color: var(--mustard-yellow) !important;
+    font-size: 1.2rem;
+}/* Copyright Bottom Bar */
+.footer-bottom {
+    text-align: center;
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    font-size: 0.8rem;
+    opacity: 0.6;
+    letter-spacing: 1px;
+}
+
+        @media (max-width: 768px) {
+            nav#nav-links { display: none; }
+            .footer-container { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+        .job-card {
+    background: var(--glass);
+    /* 1. Keep your existing border for the other 3 sides */
+    border: 1px solid rgba(225, 173, 1, 0.2); 
+    
+    /* 2. Add the thick mustard line at the bottom */
+    border-bottom: 5px solid var(--mustard-yellow); 
+    
+    padding: 40px 25px;
+    
+    /* 3. Ensure the bottom corners of the border match the card's curve */
+    border-radius: 15px; 
+    
+    text-align: left;
+    transition: 0.4s;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+    
+    /* 4. Optional: Adds a slight glow to the bottom line like the screenshot */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); 
+}
+
+/* Update the hover state so the line remains prominent */
+.job-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--mustard-yellow);
+    border-bottom-width: 6px; /* Slightly thicker on hover for effect */
+    background: rgba(225, 173, 1, 0.05);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+/* Styling for disabled buttons */
+.details-btn:disabled, .apply-btn:disabled {
+    background: #444 !important;
+    border-color: #444 !important;
+    color: #888 !important;
+    cursor: not-allowed;
+    transform: none !important; /* Prevents hover lift */
+}
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <div class="logo">
+        <a href="index.html">
+            <img src="images/Logo-Hulu.jpg" alt="HULUTECH Logo">
+        </a>
+    </div>
+    <nav id="nav-links">
+        <a href="index.html">Home</a>
+       <!-- <div class="dropdown">
+          <a href="about.html" class="dropbtn">About <i class="fas fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="about.html?tab=story">Our Story</a>
+                <a href="about.html?tab=team">Leadership Team</a>
+            </div>-->
+        </div>
+          <a href="about.html">About</a>
+        <a href="services.html">Services</a>
+        <a href="Career.html">Careers</a>
+        <a href="Partnership.html">Partnerships</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<section id="careers">
+    <div class="careers-content">
+        <h2>Join Our Team</h2>
+        <div class="job-listings">
+            <div class="job-card" id="card-job1">
+                <h3>Senior Software Engineer</h3>
+                <div class="job-meta">Full-time • Remote</div>
+                <p>Lead the development of next-gen tech solutions.</p>
+                <div class="btn-group">
+                    <button class="details-btn" onclick="viewJobDetails('job1')">Details</button>
+                   <button class="apply-btn" onclick="openApplyNow('Senior Software Engineer')">Apply Now →</button>
+                </div>
+            </div>
+            <div class="job-card" id="card-job2">
+                <h3>UX/UI Designer</h3>
+                <div class="job-meta">Full-time • Hybrid</div>
+                <p>Create beautiful, intuitive user experiences.</p>
+                <div class="btn-group">
+                    <button class="details-btn" onclick="viewJobDetails('job2')">Details</button>
+                      <button class="apply-btn" onclick="openApplyNow('UX/UI Designer')">Apply Now →</button>
+                </div>
+            </div>
+            <div class="job-card" id="card-job3">
+                <h3>DevOps Engineer</h3>
+                <div class="job-meta">Full-time • Remote</div>
+                <p>Maintain robust, scalable infrastructure.</p>
+                <div class="btn-group">
+                    <button class="details-btn" onclick="viewJobDetails('job3')">Details</button>
+                    <button class="apply-btn" onclick="openApplyNow('DevOps Engineer')">Apply Now →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="detailsModal" class="hulu-modal">
+    <div class="hulu-modal-content">
+        <span class="close-btn" onclick="closeModal('detailsModal')">&times;</span>
+        <h2 id="modalTitle" style="color: var(--mustard-yellow); margin-bottom: 5px;"></h2>
+        <div id="modalMeta" class="job-meta"></div>
+        <div class="details-body">
+            <h4>Role Description</h4>
+            <p id="modalDesc"></p>
+            <h4>Responsibilities</h4>
+            <ul id="modalResp"></ul>
+            <h4>Requirements</h4>
+            <ul id="modalReq"></ul>
+        </div>
+        <button class="submit-app-btn" style="margin-top: 20px;" id="modalApplyBtn">Apply For This Position</button>
+    </div>
+</div>
+
+<div id="applyModal" class="hulu-modal">
+    <div class="hulu-modal-content">
+        <span class="close-btn" onclick="closeApplyNow()">&times;</span>
+        <div class="modal-header">
+            <h3>Submit Application</h3>
+            <p style="margin-bottom: 20px;">Position: <span id="job-title-display" style="font-weight: bold; color: var(--mustard-yellow);"></span></p>
+        </div>
+        <form id="apply-form" enctype="multipart/form-data">
+            <input type="hidden" name="access_key" value="3ad99661-0eb3-44d9-b711-f4f582978489">
+            <input type="hidden" name="job_position" id="job-title-input">
+            <div class="form-group"><label>Full Name</label><input type="text" name="name" required></div>
+            <div class="form-group"><label>Email Address</label><input type="email" name="email" required></div>
+            
+           <!--
+<div class="form-group">
+    <label>Upload CV (PDF/Word)</label>
+    <input type="file" name="attachment" accept=".pdf,.doc,.docx" required class="cv-upload-input">
+</div>
+-->
+
+            <div class="form-group"><label>Why are you a good fit?</label><textarea name="message" rows="4" required></textarea></div>
+            <button type="submit" id="submit-btn" class="submit-app-btn">Send Application</button>
+            <div id="result" style="margin-top: 15px; text-align: center; font-weight: bold;"></div>
+        </form>
+    </div>
+</div>
+
+<footer class="main-footer">
+    <div class="footer-container">
+        <div class="footer-col">
+            <h2>CONNECT</h2>
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/company/hulutech" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/27765718894" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">Our Story</a></li>
+                <li><a href="services.html">Services</a></li>
+                <li><a href="Career.html">Career</a></li>
+                <li><a href="index.html#newsfeed">Latest News</a></li>
+                <li><a href="contact.html">Get In Touch</a></li>
+                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <div class="contact-details">
+                <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
+                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
+                <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 HULUTECH | All Rights Reserved</p>
+    </div>
+</footer>
+
+<script>
+    // --- JOB DATABASE ---
+    const huluJobs = [
+        { 
+            id: 'job1', 
+            title: "Senior Software Engineer", 
+            meta: "Full-time • Remote",
+            desc: "Join our core engineering team to build scalable cloud solutions.",
+            resp: ["Develop high-quality code", "Mentor junior devs", "Architect systems"],
+            reqs: ["5+ Years Experience", "Node.js & Python", "AWS Knowledge"]
+        },
+        { 
+            id: 'job2', 
+            title: "UX/UI Designer", 
+            meta: "Full-time • Hybrid",
+            desc: "Craft the visual identity and user journey of our tech products.",
+            resp: ["Create wireframes", "User testing", "Design prototypes"],
+            reqs: ["Portfolio required", "Figma Expert", "3+ Years Experience"]
+        },
+        { 
+            id: 'job3', 
+            title: "DevOps Engineer", 
+            meta: "Full-time • Remote",
+            desc: "Ensure our deployments are smooth and our servers are secure.",
+            resp: ["Manage CI/CD", "Cloud security", "Server monitoring"],
+            reqs: ["Kubernetes", "Docker", "Terraform skills"]
+        }
+    ];
+
+    // --- VIEW DETAILS LOGIC ---
+    function viewJobDetails(id) {
+        const job = huluJobs.find(j => j.id === id);
+        document.getElementById('modalTitle').innerText = job.title;
+        document.getElementById('modalMeta').innerText = job.meta;
+        document.getElementById('modalDesc').innerText = job.desc;
+        document.getElementById('modalResp').innerHTML = job.resp.map(r => `<li>${r}</li>`).join('');
+        document.getElementById('modalReq').innerHTML = job.reqs.map(r => `<li>${r}</li>`).join('');
+        
+        document.getElementById('modalApplyBtn').onclick = () => {
+            closeModal('detailsModal');
+            openApplyNow(job.title);
+        };
+        
+        document.getElementById('detailsModal').style.display = 'flex';
+    }
+
+    // --- FORM SUBMISSION ---
+    const form = document.getElementById('apply-form');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(form);
+        result.innerHTML = "Sending Application...";
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            body: formData // Using FormData directly for file support
+        })
+        .then(async (response) => {
+            if (response.status == 200) {
+                result.innerHTML = "Application Sent Successfully! ✅";
+                result.style.color = "#e1ad01";
+                form.reset();
+                setTimeout(() => closeApplyNow(), 3000);
+            } else {
+                result.innerHTML = "Error. Please check file size.";
+                result.style.color = "#ff4444";
+            }
+        });
+    });
+
+    // --- UI HELPERS ---
+    function openApplyNow(jobTitle) {
+        document.getElementById('job-title-display').innerText = jobTitle;
+        document.getElementById('job-title-input').value = jobTitle;
+        document.getElementById('applyModal').style.display = 'flex';
+    }
+
+    function closeApplyNow() { 
+        document.getElementById('applyModal').style.display = 'none'; 
+    }
+
+    function closeModal(id) { 
+        document.getElementById(id).style.display = 'none'; 
+    }
+
+    window.onclick = function(event) {
+        // Close modals if the dark overlay (hulu-modal class) is clicked
+        if (event.target.className === 'hulu-modal') {
+            closeApplyNow();
+            closeModal('detailsModal');
+        }
+    }
+
+    // --- DISABLE BUTTON LOGIC ---
+    function updateWebsiteButtons() {
+        // Ensure huluJobs array exists before running
+        if (typeof huluJobs === 'undefined') return;
+
+        huluJobs.forEach(job => {
+            const card = document.getElementById('card-' + job.id);
+            if (!card) return;
+
+            // Select both buttons inside this specific card
+            const applyBtn = card.querySelector('.apply-btn');
+            const detailsBtn = card.querySelector('.details-btn');
+            
+            const isDisabled = localStorage.getItem('disabled_' + job.id) === 'true';
+
+            if (isDisabled) {
+                // 1. Handle Apply Button
+                if (applyBtn) {
+                    applyBtn.innerText = "Closed";
+                    applyBtn.disabled = true;
+                    applyBtn.style.background = "#444";
+                    applyBtn.style.pointerEvents = "none"; // Hard disable click
+                }
+
+                // 2. Handle Details Button
+                if (detailsBtn) {
+                    detailsBtn.disabled = true;
+                    detailsBtn.style.color = "#666";
+                    detailsBtn.style.borderColor = "#444";
+                    detailsBtn.style.opacity = "0.5";
+                    detailsBtn.style.pointerEvents = "none"; // Hard disable click
+                }
+            }
+        });
+    }
+
+    // Run the check as soon as the page loads
+    document.addEventListener('DOMContentLoaded', updateWebsiteButtons);
+</script>
+</body>
+</html>

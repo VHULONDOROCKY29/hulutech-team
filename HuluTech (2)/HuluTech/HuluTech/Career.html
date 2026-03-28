@@ -425,6 +425,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
+        <a href="LatestNews.html">LatestNews</a>
     </nav>
 </header>
 
@@ -493,12 +494,12 @@
             <div class="form-group"><label>Full Name</label><input type="text" name="name" required></div>
             <div class="form-group"><label>Email Address</label><input type="email" name="email" required></div>
             
-           <!--
+           
 <div class="form-group">
     <label>Upload CV (PDF/Word)</label>
     <input type="file" name="attachment" accept=".pdf,.doc,.docx" required class="cv-upload-input">
 </div>
--->
+
 
             <div class="form-group"><label>Why are you a good fit?</label><textarea name="message" rows="4" required></textarea></div>
             <button type="submit" id="submit-btn" class="submit-app-btn">Send Application</button>
@@ -523,7 +524,7 @@
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                 <li><a href="Career.html">Career</a></li>
-                <li><a href="index.html#newsfeed">Latest News</a></li>
+                 <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
                  <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
@@ -589,32 +590,64 @@
         document.getElementById('detailsModal').style.display = 'flex';
     }
 
-    // --- FORM SUBMISSION ---
-    const form = document.getElementById('apply-form');
-    const result = document.getElementById('result');
+// --- UPDATED FORM SUBMISSION (BYPASSES WEB3FORMS SIZE ERROR) ---
+const form = document.getElementById('apply-form');
+const result = document.getElementById('result');
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(form);
-        result.innerHTML = "Sending Application...";
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Clear status and disable button
+    result.innerHTML = "Processing Application...";
+    result.style.color = "#e1ad01"; 
 
-        fetch('https://api.web3forms.com/submit', {
+    const formData = new FormData(form);
+
+    try {
+        // --- STEP 1: SEND TO YOUR BACKEND (Saves CV to MongoDB & Uploads folder) ---
+        // This is the most important part for your Data Analytics project!
+        const backendResponse = await fetch('http://localhost:5000/api/career/apply', {
             method: 'POST',
-            body: formData // Using FormData directly for file support
-        })
-        .then(async (response) => {
-            if (response.status == 200) {
-                result.innerHTML = "Application Sent Successfully! ✅";
-                result.style.color = "#e1ad01";
-                form.reset();
-                setTimeout(() => closeApplyNow(), 3000);
-            } else {
-                result.innerHTML = "Error. Please check file size.";
-                result.style.color = "#ff4444";
-            }
+            body: formData 
         });
-    });
 
+        if (!backendResponse.ok) {
+            throw new Error("Local backend failed to save the file.");
+        }
+
+        // --- STEP 2: SEND ONLY TEXT TO WEB3FORMS (Email Alert) ---
+        // We build a 'clean' object without the file to bypass the size error
+        const emailObject = {
+            access_key: formData.get('access_key'), // Uses the key from your hidden input
+            name: formData.get('name'),
+            email: formData.get('email'),
+            job_position: formData.get('job_position'),
+            message: formData.get('message'),
+            subject: "New Application: " + formData.get('name')
+        };
+
+        // This request will NOT have the file, so Web3Forms won't block it
+        await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(emailObject)
+        });
+
+        // --- STEP 3: SUCCESS ---
+        result.innerHTML = "Application Stored Successfully! ✅";
+        form.reset();
+        
+        // Closes the modal after 3 seconds
+        setTimeout(() => {
+            if (typeof closeApplyNow === 'function') closeApplyNow();
+        }, 3000);
+
+    } catch (err) {
+        console.error("Submission error:", err);
+        result.innerHTML = "❌ Connection Error. Is your backend server.js running?";
+        result.style.color = "#ff4444";
+    }
+});
     // --- UI HELPERS ---
     function openApplyNow(jobTitle) {
         document.getElementById('job-title-display').innerText = jobTitle;

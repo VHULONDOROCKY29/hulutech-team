@@ -220,6 +220,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
+        <a href="LatestNews.html">LatestNews</a>
     </nav>
 </header>
 
@@ -314,7 +315,7 @@
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                   <a href="Career.html">Career</a>
-                  <li><a href="index.html#newsfeed">Latest News</a></li>
+                 <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
@@ -336,55 +337,233 @@
     </div>
 </footer>
 
+
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-<script>
-    const form = document.getElementById('contact-form');
+<script>// 1. SELECT ELEMENTS (Check IDs carefully)
+    // Using 'contactForm' as the primary ID. Ensure your HTML <form> matches this.
+    const form = document.getElementById('contactForm') || document.getElementById('contact-form');
     const statusMsg = document.getElementById('status-message');
-    const submitBtn = document.getElementById('submitBtn');
+    const submitBtn = document.getElementById('submit-btn') || document.getElementById('submitBtn');
     const phoneInput = document.querySelector("#phone");
-    const phoneFullField = document.querySelector("#phone_full");
 
-    const iti = window.intlTelInput(phoneInput, {
-        initialCountry: "za",
-        separateDialCode: true,
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
-    });
+    // 2. INITIALIZE PHONE INPUT (iti)
+    let iti;
+    if (phoneInput) {
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: "za",
+            separateDialCode: true,
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+        });
+    }
 
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (!iti.isValidNumber()) {
-            statusMsg.className = "status-message status-error";
-            statusMsg.innerHTML = "Invalid phone number.";
+    // 3. FORM SUBMISSION LOGIC
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Validate Phone via iti
+            if (iti && !iti.isValidNumber()) {
+                statusMsg.className = "status-message status-error";
+                statusMsg.innerHTML = "Invalid phone number.";
+                statusMsg.style.display = "block";
+                return;
+            }
+
+            // Disable button and show processing status
+            if (submitBtn) submitBtn.disabled = true;
             statusMsg.style.display = "block";
+            statusMsg.className = "status-message";
+            statusMsg.innerHTML = "Processing your request...";
+
+            // Prepare Data
+            const formData = new FormData(form);
+            const dataObject = Object.fromEntries(formData);
+            
+            // Add full international phone number to the data object
+            if (iti) {
+                dataObject.phone = iti.getNumber();
+            }
+
+            try {
+                // --- TASK A: Save to your HULUTECH MongoDB Database ---
+                const dbPromise = fetch('http://localhost:5000/api/contact/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataObject)
+                });
+
+                // --- TASK B: Send to Web3Forms (Email Notification) ---
+                const web3Promise = fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(dataObject)
+                });
+
+                // Execute both requests simultaneously
+                const [dbRes, web3Res] = await Promise.all([dbPromise, web3Promise]);
+
+                if (dbRes.ok && web3Res.status === 200) {
+                    statusMsg.className = "status-message status-success";
+                    statusMsg.innerHTML = "Sent Successfully & Saved to Database! ✅";
+                    form.reset();
+                } else if (dbRes.ok) {
+                    statusMsg.className = "status-message status-success";
+                    statusMsg.innerHTML = "Saved to Database, but Email notification failed.";
+                } else {
+                    statusMsg.className = "status-message status-error";
+                    statusMsg.innerHTML = "Failed to save message. Please try again.";
+                }
+
+            } catch (err) {
+                console.error("Submission Error:", err);
+                statusMsg.className = "status-message status-error";
+                statusMsg.innerHTML = "Connection Error: Check if your local server is running.";
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // 4. NAVIGATION / MOBILE MENU LOGIC
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    if (hamburger && navLinks) {
+        hamburger.onclick = function() {
+            navLinks.classList.toggle('active');
+        };
+    }
+    /**
+ * HULUTECH MAIN.JS - Unified Client Logic
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    const contactForm = document.getElementById('contactForm') || document.getElementById('contact-form');
+    const statusMsg = document.getElementById('status-message');
+    const submitBtn = document.getElementById('submit-btn') || document.getElementById('submitBtn');
+    const phoneInput = document.querySelector("#phone");
+
+    let iti;
+    if (phoneInput) {
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: "za",
+            separateDialCode: true,
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
+        });
+    }
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (iti && !iti.isValidNumber()) {
+                showStatus("Invalid phone number.", "status-error");
+                return;
+            }
+
+            setLoading(true);
+            const formData = new FormData(contactForm);
+            const dataObject = Object.fromEntries(formData);
+            if (iti) dataObject.phone = iti.getNumber();
+
+            try {
+                // Task 1: Local DB | Task 2: Web3Forms
+                const [dbRes, web3Res] = await Promise.all([
+                    fetch('http://localhost:5000/api/contact/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dataObject)
+                    }),
+                    fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(dataObject)
+                    })
+                ]);
+
+                if (dbRes.ok) {
+                    showStatus("Inquiry saved successfully! ✅", "status-success");
+                    contactForm.reset();
+                }
+            } catch (err) {
+                showStatus("Server connection error.", "status-error");
+            } finally {
+                setLoading(false);
+            }
+        });
+    }
+
+    function showStatus(msg, className) {
+        if (!statusMsg) return;
+        statusMsg.style.display = "block";
+        statusMsg.className = `status-message ${className}`;
+        statusMsg.innerHTML = msg;
+    }
+
+    function setLoading(isLoading) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isLoading;
+        submitBtn.innerHTML = isLoading ? "Sending..." : "Send Message";
+    }
+});
+
+
+/**
+ * HULUTECH ADMIN.JS - Dashboard Management
+ */
+
+// 1. Tab Switcher Logic
+function switchTab(event, tabId) {
+    // Hide all panes
+    document.querySelectorAll('.apane').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.atab').forEach(t => t.classList.remove('on'));
+
+    // Show selected
+    const target = document.getElementById(tabId);
+    if (target) target.style.display = 'block';
+    if (event) event.currentTarget.classList.add('on');
+
+    // Trigger Data Load
+    if (tabId === 'pInquiries') loadContactsAdmin();
+    if (tabId === 'pPartners') loadPartnershipsAdmin();
+}
+
+// 2. Fetch Inquiries from MongoDB
+async function loadContactsAdmin() {
+    const list = document.getElementById('adminContactList');
+    const badge = document.getElementById('contactBadge');
+    
+    try {
+        const res = await fetch('http://localhost:5000/api/contact/all');
+        const messages = await res.json();
+        
+        if (badge) badge.innerText = messages.length;
+
+        if (messages.length === 0) {
+            list.innerHTML = `<p style="color:gray; text-align:center;">No new messages.</p>`;
             return;
         }
-        submitBtn.disabled = true;
-        phoneFullField.value = iti.getNumber();
 
-        const formData = new FormData(form);
-        const object = Object.fromEntries(formData);
+        list.innerHTML = messages.map(m => `
+            <div class="admin-card" style="border-left: 4px solid #00d4ff; background: rgba(255,255,255,0.05); padding: 15px; margin-bottom: 10px; border-radius: 8px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <strong style="color:white;">${m.name}</strong>
+                    <button onclick="deleteContact('${m._id}')" style="color:#ff4444; background:none; border:none; cursor:pointer;">Delete</button>
+                </div>
+                <p style="color:#00d4ff; font-size:0.8rem; margin:5px 0;">${m.email} | ${m.phone}</p>
+                <p style="color:white; opacity:0.8; font-size:0.9rem;">${m.message}</p>
+                <small style="color:gray;">Received: ${new Date(m.createdAt).toLocaleDateString()}</small>
+            </div>
+        `).join('');
+    } catch (err) {
+        list.innerHTML = `<p style="color:red;">Failed to connect to backend.</p>`;
+    }
+}
 
-        fetch('https://api.web3forms.com/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-            body: JSON.stringify(object)
-        })
-        .then(async (response) => {
-            if (response.status == 200) {
-                statusMsg.className = "status-message status-success";
-                statusMsg.innerHTML = "Sent Successfully!";
-                form.reset();
-            }
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-            statusMsg.style.display = "block";
-        });
-    });
-
-    document.getElementById('hamburger').onclick = function() {
-        document.getElementById('nav-links').classList.toggle('active');
-    };
+// 3. Delete Inquiry
+window.deleteContact = async function(id) {
+    if (!confirm("Delete this message?")) return;
+    const res = await fetch(`http://localhost:5000/api/contact/${id}`, { method: 'DELETE' });
+    if (res.ok) loadContactsAdmin(); // Refresh list
+};
 </script>
 </body>
 </html>

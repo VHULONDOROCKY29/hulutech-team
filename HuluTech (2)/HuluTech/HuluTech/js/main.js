@@ -497,3 +497,65 @@ function initPrivacyLogic() {
 window.addEventListener('DOMContentLoaded', initPrivacyLogic);
 // Also run if the page is loaded via history/back button
 window.addEventListener('pageshow', initPrivacyLogic);
+
+
+//career //// --- CAREER FORM SUBMISSION ---
+// --- CAREER FORM SUBMISSION (STRICT BYPASS VERSION) ---
+const form = document.getElementById('apply-form');
+const result = document.getElementById('result');
+
+if (form) {
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // 1. Prepare Data
+        const formData = new FormData(form);
+        result.innerHTML = "Processing Application...";
+        result.style.color = "#e1ad01";
+
+        try {
+            // --- PACKAGE A: FULL DATA FOR YOUR BACKEND ---
+            // This includes the CV file. Your backend handles the 5MB limit.
+            const backendPromise = fetch('http://localhost:5000/api/career/apply', {
+                method: 'POST',
+                body: formData 
+            });
+
+            // --- PACKAGE B: TEXT-ONLY FOR WEB3FORMS ---
+            // We manually build this to ensure NO file is attached.
+            const emailData = new FormData();
+            emailData.append("access_key", "YOUR_WEB3FORMS_KEY_HERE"); // Ensure your key is here!
+            emailData.append("name", formData.get("name"));
+            emailData.append("email", formData.get("email"));
+            emailData.append("job_position", formData.get("job_position"));
+            emailData.append("message", formData.get("message"));
+            emailData.append("subject", "New Application for " + formData.get("job_position"));
+            emailData.append("Note", "The CV file was saved directly to your local server uploads folder.");
+
+            const web3Promise = fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: emailData
+            });
+
+            // Run both requests
+            const [backendRes, web3Res] = await Promise.all([backendPromise, web3Promise]);
+
+            if (backendRes.ok) {
+                result.innerHTML = "Application Sent & Stored Successfully! ✅";
+                form.reset();
+                setTimeout(() => {
+                    if (typeof closeApplyNow === 'function') closeApplyNow();
+                }, 3000);
+            } else {
+                const errorData = await backendRes.json();
+                result.innerHTML = "Backend Error: " + (errorData.error || "Check file size.");
+                result.style.color = "#ff4444";
+            }
+
+        } catch (error) {
+            console.error("Submission error:", error);
+            result.innerHTML = "Connection Error. Is your backend running?";
+            result.style.color = "#ff4444";
+        }
+    });
+}

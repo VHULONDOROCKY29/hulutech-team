@@ -43,7 +43,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+       <a href="LatestNews.html">LatestNews</a>
     </nav>
 </header>
 </header>
@@ -578,66 +578,86 @@ body { font-family: 'Inter', sans-serif; }
             .n-meta { display:none; }
             #heroNotices { max-width:100%; }
         }
+      /* ── FIXED SHAPED CARDS ── */
+.news-card {
+    background: #111827;
+    border: 1px solid rgba(255, 217, 0, 0.15);
+    border-radius: 16px;
+    height: 520px; /* Increased slightly to fit everything comfortably */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 10px solid #E1AD01; 
+    transition: all 0.3s ease;
+}
+
+.card-body {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between elements */
+}
+
+/* ── TEXT TRUNCATION (CRITICAL) ── */
+.card-desc {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    /* This forces the text to only show 3-4 lines so the button can fit */
+    display: -webkit-box;
+    -webkit-line-clamp: 4; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: auto; /* Pushes the button to the bottom */
+}
+
+/* ── RE-APPEARING BUTTONS ── */
+.view-more-btn {
+    width: 100%;
+    background: #E1AD01;
+    color: #000;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 15px; /* Ensures a gap from the text */
+    z-index: 5; /* Makes sure it's clickable */
+}
+
+.view-more-btn:hover {
+    background: #ffcc00;
+    transform: translateY(-2px);
+}
+/* ── PULL CONTENT UP TO NAVBAR ── */
+
+/* 1. Target the main section (likely #home or your main wrapper) */
+#home {
+    padding-top: 20px !important; /* Reduce this number to move it higher */
+    min-height: auto !important;  /* Prevents the section from forcing a huge height */
+}
+
+/* 2. Target the specific Notices/Cards container */
+#heroNotices { 
+    margin-top: -30px; /* Use a negative margin to pull the cards UP even more */
+    position: relative;
+    z-index: 10;
+}
+
+/* 3. If you have a specific container for the grid */
+.news-container {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
 </style>
 </head>
 
 <body class="bg-[#06122b] text-white min-h-screen">
 
 
-
-<!-- HERO SECTION -->
-<section class="relative flex items-center justify-center text-center px-6 md:px-16 min-h-screen bg-cover bg-center bg-no-repeat"
-style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25)), url('images/background5.png');">
-
-  <div class="max-w-3xl animate-slide-in">
-
-    <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-white mb-6">
-       We help businesses stay secure, innovative, and future‑proof.
-    </h1>
-
-    <!--p class="text-lg md:text-xl text-blue-200 mb-8">
-      We help businesses stay secure, innovative, and future‑proof.
-    </p-->
-
-    <div class="font-semibold tracking-widest text-sm uppercase mb-8 text-white">
-      Protect. Connect. Analyze.
-    </div>
-
-    <!-- ✅ MOVE STATS BAR HERE -->
-  <div class="flex justify-center gap-10 text-white mb-10">
-
-    <div>
-         <h3 class="text-3xl font-bold text-white">15+</h3>
-      <p class="text-sm uppercase tracking-wide">Years Experience</p>
-    </div>
-
-    <div>
-      <h3 class="text-3xl font-bold text-white">120+</h3>
-      <p class="text-sm uppercase tracking-wide">Projects Delivered</p>
-    </div>
-
-    <div>
-      <h3 class="text-3xl font-bold text-white">98%</h3>
-      <p class="text-sm uppercase tracking-wide">Client Retention</p>
-    </div>
-
-  </div>
-
-    <!-- CTA BUTTONS -->
-    <div class="flex flex-wrap justify-center gap-4">
-
-      <a href="contact.html" class="inline-block bg-[#E1AD01] hover:bg-[#c89600] text-black px-8 py-3 rounded-lg font-semibold shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
-        Book a Consultation
-      </a>
-
-      <a href="services.html" class="border border-white hover:bg-white hover:text-[#06122b] px-6 py-3 rounded-lg font-semibold transition duration-300">
-        Quick View Services
-      </a>
-
-    </div>
-
-  </div>
-</section>
 
 
 
@@ -650,7 +670,7 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 <!-- NEWSFEED -->
 <section id="newsfeed">
     <div class="container newsfeed-container">
-        <h2 class="section-title">Latest News</h2>
+        <h2 class="section-title"></h2>
         <div class="marquee" id="marqueeBar" style="display:none;"><span id="marqueeText"></span></div>
         <div class="news-grid" id="newsGrid"></div>
     </div>
@@ -718,7 +738,7 @@ const ICONS = { announcement:'📢', update:'🔄', event:'📅', achievement:'�
 
 function renderAll() {
     renderHeroNotices();
-    renderMarquee();
+   // renderMarquee();//
     renderNewsGrid();
     renderMgmt();
 }
@@ -750,6 +770,7 @@ function renderHeroNotices() {
 }
 
 /* --- Marquee --- */
+/*
 function renderMarquee() {
     const bar  = document.getElementById('marqueeBar');
     const text = document.getElementById('marqueeText');
@@ -758,7 +779,7 @@ function renderMarquee() {
         text.textContent = items.map(n => `⭐ ${n.title}`).join('   •   ');
         bar.style.display = 'block';
     } else { bar.style.display = 'none'; }
-}
+}*/
 
 /* --- News grid (non-important items) --- */
 function renderNewsGrid() {
@@ -766,7 +787,7 @@ function renderNewsGrid() {
     const regular = DB.filter(n => !n.isImportant);
     grid.innerHTML = '';
     if (!regular.length) {
-        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news yet — open the Admin panel to publish your first post!</p>';
+        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news yet !</p>';
         return;
     }
     regular.forEach(n => {
@@ -784,34 +805,290 @@ function renderNewsGrid() {
     });
 }
 
+function buildCardMediaHTML(n) {
+    if (n.mediaType === 'none' || !n.mediaUrl) return '';
+    if (n.mediaType === 'image') {
+        return `<div class="card-media">
+            <img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')">
+        </div>`;
+    }
+    if (n.mediaType === 'video') {
+        return `<div class="card-media">
+            <video controls preload="metadata" src="${n.mediaUrl}"></video>
+        </div>`;
+    }
+    if (n.mediaType === 'document') {
+        return `<div class="card-media">
+            <div class="card-doc">
+                <div class="card-doc-icon">📄</div>
+                <div class="card-doc-name">${x(n.mediaName || 'Document')}</div>
+            </div>
+     <div id="view-container" style="display:none; width:100%; max-width:900px; margin: 25px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+    
+    <div style="background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FFC107;">
+        <div style="display: flex; align-items:center; gap: 8px;">
+            <span style="background: #FFC107; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">PDF</span>
+            <span style="color: #eee; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;">DOCUMENT PREVIEW</span>
+        </div>
+        <div style="font-size: 11px; color: #888; text-transform: uppercase;">Secure Viewer</div>
+    </div>
+
+    <div style="position: relative; background: #525659; height: 600px;">
+        <iframe name="pdf-frame" width="100%" height="100%" style="border:none; display: block;"></iframe>
+    </div>
+</div>
+        </div>`;
+    }
+    return '';
+}
+
+function buildCardBtns(n) {
+    let b = '';
+    if (n.link) b += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="ca-btn ca-primary">Read More →</a>`;
+    if (n.mediaType === 'image' && n.mediaUrl)
+        b += `<button class="ca-btn ca-ghost" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 Full Image</button>`;
+    if (n.mediaType === 'video' && n.mediaUrl)
+        b += `<button class="ca-btn ca-cyan" onclick="this.closest('.news-card').querySelector('video').play()">▶ Play</button>`;
+    if (n.mediaType === 'document' && n.mediaUrl)
+        b += `<a href="${n.mediaUrl}" target="_blank" download="${x(n.mediaName||'file')}" class="ca-btn ca-ghost">⬇ Download</a>`;
+   if (n.mediaType === 'document' && n.mediaUrl) {
+    // We add an ID to the button and a custom function 'toggleViewer'
+    b += `<a href="${n.mediaUrl}" 
+             id="view-btn"
+             target="pdf-frame" 
+             onclick="toggleViewer(this, '${n.mediaUrl}')"
+             class="ca-btn ca-ghost">👁 view</a>`;
+}
+    if (!b)
+        b = `<button class="ca-btn ca-ghost" onclick="shareItem('${esc4js(n.title)}')">🔗 Share</button>`;
+    return b;
+}
+
+/* --- Manage list --- */
+function renderMgmt() {
+    document.getElementById('cntBadge').textContent = DB.length;
+    const list = document.getElementById('mgmtList');
+    if (!DB.length) { list.innerHTML = '<p style="opacity:.5;font-size:.9rem;">Nothing published yet.</p>'; return; }
+    list.innerHTML = DB.map(n => `
+        <div class="mgmt-item ${n.isImportant ? 'imp' : ''}">
+            <div style="flex:1;min-width:0;">
+                <div class="mgmt-title">${x(n.title)}</div>
+                <div class="mgmt-meta">${n.type} • ${n.date}${n.mediaType !== 'none' ? ' • ' + n.mediaType : ''}</div>
+                <div class="mgmt-tags">
+                    ${n.isImportant  ? '<span class="mtag mtag-y">⚠ Homepage</span>' : ''}
+                    ${n.showMarquee  ? '<span class="mtag mtag-c">⭐ Marquee</span>' : ''}
+                    ${n.mediaType !== 'none' ? `<span class="mtag mtag-g">${mEmoji(n.mediaType)} ${n.mediaType}</span>` : ''}
+                </div>
+            </div>
+            <button class="del-btn" onclick="delNews(${n.id})">Delete</button>
+        </div>`).join('');
+}
+const mEmoji = t => t==='image'?'🖼':t==='video'?'🎬':'📄';
+
+/* ================================================================
+   ADD / DELETE
+================================================================ */
+function addNews(e) {
+    e.preventDefault();
+    const mt = document.getElementById('fMediaType').value;
+    let finalType = 'none', finalUrl = null, finalName = '';
+
+    if (pendingFile) {
+        finalUrl  = pendingFile.dataUrl;
+        finalName = pendingFile.name;
+        if (mt === 'image' || mt === 'imgurl') finalType = 'image';
+        else if (mt === 'video' || mt === 'vidurl') finalType = 'video';
+        else finalType = 'document';
+    }
+
+    const item = {
+        id: nid++,
+        title:       document.getElementById('fTitle').value.trim(),
+        type:        document.getElementById('fType').value,
+        content:     document.getElementById('fContent').value.trim(),
+        link:        document.getElementById('fLink').value.trim(),
+        mediaType:   finalType,
+        mediaUrl:    finalUrl,
+        mediaName:   finalName,
+        date:        new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+        isImportant: document.getElementById('cbImportant').checked,
+        showMarquee: document.getElementById('cbMarquee').checked,
+    };
+
+    DB.unshift(item);
+    saveDB();
+    renderAll();
+    resetForm();
+    alert('✅ News published successfully!');
+}
+
+async function delNews(id) {
+    if (!confirm('Delete this news item?')) return;
+    DB = DB.filter(n => n.id !== id);
+    await saveDB();
+    renderAll();
+}
+
+function resetForm() {
+    ['fTitle','fContent','fLink'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fType').value = '';
+    document.getElementById('fMediaType').value = 'none';
+    document.getElementById('cbImportant').checked = false;
+    document.getElementById('cbMarquee').checked = false;
+    document.getElementById('dropZone').style.display = 'none';
+    document.getElementById('urlInp').style.display = 'none';
+    clearMedia();
+}
+
+/* ================================================================
+   MEDIA HANDLING
+================================================================ */
+function onMTChange() {
+    clearMedia();
+    const t   = document.getElementById('fMediaType').value;
+    const dz  = document.getElementById('dropZone');
+    const ui  = document.getElementById('urlInp');
+    const ico = document.getElementById('dzIcon');
+    const hint= document.getElementById('dzHint');
+    const inp = document.getElementById('fileInp');
+    dz.style.display = 'none';
+    ui.style.display = 'none';
+    if (t === 'image')    { dz.style.display='block'; ico.textContent='🖼️'; hint.textContent='PNG, JPG, GIF, WebP, SVG'; inp.accept='image/*'; }
+    if (t === 'video')    { dz.style.display='block'; ico.textContent='🎬'; hint.textContent='MP4, WebM, MOV, OGG'; inp.accept='video/*'; }
+    if (t === 'document') { dz.style.display='block'; ico.textContent='📄'; hint.textContent='PDF, DOCX, DOC, XLSX, PPTX, TXT'; inp.accept='.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt'; }
+    if (t === 'imgurl' || t === 'vidurl') { ui.style.display='block'; }
+}
+
+function onFilePick(e) {
+    const f = e.target.files[0]; if (!f) return;
+    readFile(f);
+}
+function onDragOver(e)  { e.preventDefault(); document.getElementById('dropZone').classList.add('over'); }
+function onDragLeave()  { document.getElementById('dropZone').classList.remove('over'); }
+function onFileDrop(e)  { e.preventDefault(); document.getElementById('dropZone').classList.remove('over'); const f=e.dataTransfer.files[0]; if(f) readFile(f); }
+function readFile(f) {
+    const r = new FileReader();
+    r.onload = ev => {
+        pendingFile = { dataUrl: ev.target.result, name: f.name, rawMime: f.type };
+        showPreview(f.name, ev.target.result, f.type);
+    };
+    r.readAsDataURL(f);
+}
+function onUrlType() {
+    const url = document.getElementById('urlInp').value.trim();
+    if (!url) { pendingFile = null; document.getElementById('previewStrip').style.display='none'; return; }
+    const t   = document.getElementById('fMediaType').value;
+    pendingFile = { dataUrl: url, name: url.split('/').pop() || url, rawMime: t==='imgurl'?'image/jpeg':'' };
+    showPreview(pendingFile.name, url, pendingFile.rawMime);
+}
+function showPreview(name, src, mime) {
+    const strip = document.getElementById('previewStrip');
+    const thumb = document.getElementById('previewThumb');
+    document.getElementById('previewName').textContent = name;
+    strip.style.display = 'flex';
+    if (mime && mime.startsWith('image')) {
+        thumb.innerHTML = `<img class="preview-thumb" src="${src}" alt="preview">`;
+    } else if (mime && mime.startsWith('video')) {
+        thumb.innerHTML = `<div class="preview-thumb-icon">🎬</div>`;
+    } else {
+        thumb.innerHTML = `<div class="preview-thumb-icon">📄</div>`;
+    }
+}
+function clearMedia() {
+    pendingFile = null;
+    document.getElementById('previewStrip').style.display = 'none';
+    document.getElementById('previewThumb').innerHTML = '';
+    document.getElementById('fileInp').value = '';
+    document.getElementById('urlInp').value = '';
+}
+
+/* ================================================================
+   NOTICE MODAL
+================================================================ */
+function openModal(n) {
+    document.getElementById('mCat').innerHTML  = `${ICONS[n.type]||'⚠️'} Important Notice`;
+    document.getElementById('mTitle').textContent = n.title;
+    document.getElementById('mBody').textContent  = n.content;
+    document.getElementById('mDate').textContent  = n.date;
+
+    const mm = document.getElementById('mMedia');
+    mm.style.display = 'none'; mm.innerHTML = '';
+    if (n.mediaType === 'image' && n.mediaUrl) {
+        mm.style.display = 'block';
+        mm.innerHTML = `<img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')">`;
+    } else if (n.mediaType === 'video' && n.mediaUrl) {
+        mm.style.display = 'block';
+        mm.innerHTML = `<video controls src="${n.mediaUrl}" style="width:100%;border-radius:12px;"></video>`;
+    } else if (n.mediaType === 'document' && n.mediaUrl) {
+        mm.style.display = 'block';
+        mm.innerHTML = `<div class="modal-doc-row">
+            <span>📄</span>
+            <div><strong>${x(n.mediaName||'Document')}</strong>
+            <a href="${n.mediaUrl}" target="_blank" download class="mbtn mbtn-yellow" style="margin-top:.5rem;display:inline-block;font-size:.8rem;padding:.45rem 1rem;">⬇ Download</a></div>
+        </div>`;
+    }
+
+    const btns = document.getElementById('mBtns');
+    btns.innerHTML = '';
+    if (n.link) btns.innerHTML += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="mbtn mbtn-yellow">Read More →</a>`;
+    if (n.mediaType === 'image' && n.mediaUrl)
+        btns.innerHTML += `<button class="mbtn mbtn-accent" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 View Full Image</button>`;
+    btns.innerHTML += `<button class="mbtn mbtn-ghost" onclick="closeModal()">Dismiss</button>`;
+
+    document.getElementById('noticeModal').classList.add('open');
+}
+function closeModal() { document.getElementById('noticeModal').classList.remove('open'); }
+function modalBgClick(e) { if (e.target === document.getElementById('noticeModal')) closeModal(); }
+
+
+/* ================================================================
+   UI HELPERS
+================================================================ */
+function toggleMenu()  { document.getElementById('navMenu').classList.toggle('active'); }
+function toggleAdmin() { document.getElementById('adminPanel').classList.toggle('active'); }
+function toggleCheck(id) { document.getElementById(id).checked = !document.getElementById(id).checked; }
+function gotoContact() { document.querySelector('#contact').scrollIntoView({behavior:'smooth',block:'start'}); }
+function handleContact(e) { e.preventDefault(); alert('Thank you for your message! We will get back to you soon.'); e.target.reset(); }
+function shareItem(title) {
+    if (navigator.share) navigator.share({title, url: location.href});
+    else navigator.clipboard.writeText(location.href).then(() => alert('Link copied to clipboard!'));
+}
+
+function switchTab(e, id) {
+    document.querySelectorAll('.apane').forEach(p => p.classList.remove('on'));
+    document.querySelectorAll('.atab').forEach(t => t.classList.remove('on'));
+    document.getElementById(id).classList.add('on');
+    e.currentTarget.classList.add('on');
+}
+
+/* safe escape helpers */
+function x(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function esc4js(s) { return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+/* smooth scroll for nav links */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+        e.preventDefault();
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) t.scrollIntoView({behavior:'smooth',block:'start'});
+        document.getElementById('navMenu').classList.remove('active');
+    });
+});
+
+/* keyboard ESC closes overlays */
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+        closeModal();
+        closeFS();
+    }
+});
 </script>
 </body>
 </html>
 
-<section class="testimonials">
-    <h2>What Our Clients Say</h2>
-    <div class="testimonial-slider">
-        <div class="testimonial active">
-            <img src="images/productivity.sa.png" alt="Nkululeko Jele" class="testimonial-img">
-            <p>"Hulutech guided our organisation through a phased adoption of Microsoft Azure and Microsoft 365, helping us modernise legacy workloads while reinforcing governance and security."</p>
-            <h4>Head of ICT and Facilities, Productivity SA</h4>
-        </div>
-        <div class="testimonial">
-            <img src="images/minthoney.jpeg" alt="Gundo Kwinda" class="testimonial-img">
-            <p>"Hulutech’s consultants distinguished themselves by mapping a cloud roadmap that aligned precisely with our productivity-improvement mandate and quality framework."</p>
-            <!--h4>Head: ICT and Facilities, Mint and Honey (Pty) Ltd</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/inzaloems.png" alt="Gerrit Deyzel" class="testimonial-img">
-            <p>"Hulutech has consistently demonstrated deep technical knowledge, strong project execution, and a proactive support model tailored to our business needs."</p>
-            <!-- h4>Inzalo Enterprise Management Systems</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/masana_logo.jpeg" alt="Kenneth Molomo" class="testimonial-img">
-            <p>"Hulutech provides us with advanced services regarding the Microsoft cloud platform technology stack using TOGAF methodologies with committed service delivery."</p>
-            <!-- h4>Head: IT and Systems, Masana Petroleum Solutions</h4 -->
-        </div>
-    </div>
+
 </section>
 
 

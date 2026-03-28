@@ -113,6 +113,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
+        <a href="LatestNews.html">LatestNews</a>
     </nav>
 </header>
 
@@ -166,7 +167,7 @@
         <span id="closeBtn" class="modal-close-x">×</span>
         <h2>Become a Partner</h2>
         <div id="status-message" class="status-message"></div>
-        <form id="partnershipForm">
+    <form id="partnershipForm" enctype="multipart/form-data">
             <input type="hidden" name="access_key" value="3ad99661-0eb3-44d9-b711-f4f582978489">
             <input type="hidden" name="subject" value="NEW PARTNERSHIP APPLICATION">
             <input type="hidden" name="from_name" value="Hulutech Partnerships">
@@ -181,6 +182,15 @@
             <div class="form-group">
                 <input type="email" name="email" id="partnerEmail" placeholder="Work Email" required>
             </div>
+     <div class="form-group" style="margin-bottom: 15px;">
+    <div style="background: #ffffff; border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; min-height: 45px;">
+        <label for="businessProfile" style="font-size: 0.9rem; color: #888888; margin-right: 10px; white-space: nowrap;">
+            Business Profile:
+        </label>
+        <input type="file" name="businessProfile" id="businessProfile" accept=".pdf,.doc,.docx" required 
+               style="font-size: 0.8rem; color: #333333; border: none; background: transparent; width: 100%; cursor: pointer;">
+    </div>
+</div>
             <div class="form-group phone-row">
                 <div class="phone-prefix">
                     <select name="country_code" id="countrySelect" required>
@@ -214,7 +224,7 @@
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                   <a href="Career.html">Career</a>
-                  <li><a href="index.html#newsfeed">Latest News</a></li>
+               <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
@@ -302,44 +312,59 @@
         const applyBtn = document.getElementById("applyBtn");
         const statusMsg = document.getElementById('status-message');
 
-        if (pForm && applyBtn) {
-            pForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                applyBtn.innerText = "Sending...";
-                applyBtn.disabled = true;
+       if (pForm && applyBtn) {
+    pForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        applyBtn.innerText = "Processing...";
+        applyBtn.disabled = true;
 
-                const formData = new FormData(pForm);
-                const object = Object.fromEntries(formData);
-                const json = JSON.stringify(object);
+        const formData = new FormData(pForm);
 
-                fetch('https://api.web3forms.com/submit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: json
-                })
-                .then(async (response) => {
-                    let res = await response.json();
-                    if (response.status == 200) {
-                        statusMsg.className = "status-message status-success";
-                        statusMsg.innerHTML = "✔ Application Sent! HULUTECH will contact you soon.";
-                        statusMsg.style.display = "block";
-                        pForm.reset();
-                        setTimeout(closeAllModals, 3000);
-                    } else {
-                        throw new Error(res.message);
-                    }
-                })
-                .catch(error => {
-                    statusMsg.className = "status-message status-error";
-                    statusMsg.innerHTML = "❌ Error: Could not send application.";
-                    statusMsg.style.display = "block";
-                })
-                .finally(() => {
-                    applyBtn.innerText = "Apply Now";
-                    applyBtn.disabled = false;
-                });
+        try {
+            // --- OPTION 1: SEND TO YOUR MONGODB BACKEND (Includes File) ---
+            const backendResponse = await fetch('http://localhost:5000/api/partnership/apply', {
+                method: 'POST',
+                body: formData // Sending FormData directly handles the file
             });
+
+            if (!backendResponse.ok) console.error("Failed to save to MongoDB");
+
+            // --- OPTION 2: SEND TO WEB3FORMS (Email Notification) ---
+            // We convert formData to JSON for Web3Forms
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+
+            const web3Response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: json
+            });
+
+            const res = await web3Response.json();
+
+            if (web3Response.status == 200) {
+                statusMsg.className = "status-message status-success";
+                statusMsg.innerHTML = "✔ Application Sent! HULUTECH will contact you soon.";
+                statusMsg.style.display = "block";
+                statusMsg.style.color = "#00ff00"; // Ensure visibility
+                pForm.reset();
+                setTimeout(closeAllModals, 3000);
+            } else {
+                throw new Error(res.message);
+            }
+
+        } catch (error) {
+            console.error("Submission Error:", error);
+            statusMsg.className = "status-message status-error";
+            statusMsg.innerHTML = "❌ Error: Could not process application.";
+            statusMsg.style.display = "block";
+            statusMsg.style.color = "#ff4444";
+        } finally {
+            applyBtn.innerText = "Apply Now";
+            applyBtn.disabled = false;
         }
+    });
+}
     });
 </script>
 

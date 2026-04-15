@@ -84,7 +84,121 @@
         
         .logo-track a { cursor: default !important; pointer-events: auto; }
         
-        
+        /* --- UPDATED MODAL FIELDS --- */
+
+/* 1. Target labels, selects, and inputs for uniform font & color (#757575) */
+.modal .form-group label,
+.modal .file-upload-group .file-label,
+.modal .phone-prefix select,
+.modal .form-group input,
+.modal .form-group textarea,
+.modal .phone-row input[type="tel"] {
+    font-size: 1rem !important;
+    color: #757575 !important; /* The grey color from your screenshot */
+    font-family: inherit;
+    font-weight: 500;
+}
+/* 2. Style the File Upload Container - FORCED STACK */
+.modal .file-upload-group {
+    display: flex !important;
+    flex-direction: column !important; /* Forces the button UNDER the text */
+    align-items: flex-start !important; /* Aligns both to the left */
+    background: #ffffff !important;
+    border: 1px solid #e6e7ea !important;
+    border-radius: 8px !important; 
+    padding: 15px 12px !important; /* Increased padding for two lines */
+    margin-bottom: 12px !important;
+    
+    /* IMPORTANT: Change 'height: 45px' to 'height: auto' */
+    height: auto !important; 
+    
+    /* Adds a 10px gap between the text and the button */
+    gap: 10px !important; 
+}
+
+/* Forces the label to take its own line */
+.modal .file-upload-group .file-label {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 5px !important;
+    color: #757575 !important;
+}
+
+/* 3. Style the Phone Row Container */
+.modal .phone-row {
+    display: flex;
+    background: #ffffff !important;
+    border: 1px solid #e6e7ea !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+    height: 45px;
+    margin-bottom: 12px;
+}
+
+/* 4. Placeholder styling (to match the grey exactly) */
+.modal input::placeholder,
+.modal textarea::placeholder {
+    color: #757575 !important;
+    opacity: 1; /* Fixes browser default fading */
+}
+
+/* 5. Clean internal phone field styling */
+.modal .phone-prefix select,
+.modal .phone-row input[type="tel"] {
+    border: none !important;
+    background: transparent !important;
+    height: 100%;
+    padding: 0 12px !important;
+    color: #757575 !important;
+}
+
+/* Separator line for phone prefix */
+.modal .phone-prefix {
+    border-right: 1px solid #e6e7ea !important;
+}
+
+/* 6. File Button: Keep Mustard Yellow for visibility, but text as black/grey */
+.modal input[type="file"]::file-selector-button {
+    background-color: #757575 !important;
+    color: #000 !important;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-weight: 600;
+}/* 1. Reduce the height of standard input fields */
+.modal .form-group input {
+    height: 35px !important; /* Shorter than standard 45px */
+    padding: 5px 12px !important;
+}
+
+/* 2. Tighten spacing between all form rows */
+.modal .form-group {
+    margin-bottom: 8px !important;
+}
+
+/* 3. Shrink the textarea significantly */
+.modal textarea {
+    height: 50px !important; /* Minimal height to keep 'Apply Now' visible */
+    padding: 8px 12px !important;
+}
+
+/* 4. Reduce the overall Modal padding and Header size */
+.modal-content {
+    padding: 15px 20px !important;
+}
+
+.modal h2 {
+    margin-top: 5px !important;
+    margin-bottom: 12px !important;
+    font-size: 1.4rem !important;
+}
+
+/* 5. Ensure the Phone Row matches the new shorter height */
+.modal .phone-row {
+    height: 35px !important;
+    margin-bottom: 8px !important;
+}
     </style>
 </head>
 <body>
@@ -113,7 +227,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+       
     </nav>
 </header>
 
@@ -182,13 +296,12 @@
             <div class="form-group">
                 <input type="email" name="email" id="partnerEmail" placeholder="Work Email" required>
             </div>
-     <div class="form-group" style="margin-bottom: 15px;">
-    <div style="background: #ffffff; border-radius: 10px; padding: 10px 15px; display: flex; align-items: center; min-height: 45px;">
-        <label for="businessProfile" style="font-size: 0.9rem; color: #888888; margin-right: 10px; white-space: nowrap;">
-            Business Profile:
+  <div class="form-group" style="margin-bottom: 8px;">
+    <div style="background: #ffffff; border-radius: 8px; padding: 6px 12px; border: 1px solid #e6e7ea;">
+        <label for="businessProfile" style="display: block; font-size: 0.85rem; color: #757575; font-weight: 500; margin-bottom: 2px;">
+            Upload Business Profile:
         </label>
-        <input type="file" name="businessProfile" id="businessProfile" accept=".pdf,.doc,.docx" required 
-               style="font-size: 0.8rem; color: #333333; border: none; background: transparent; width: 100%; cursor: pointer;">
+        <input type="file" id="businessProfile" name="businessProfile" style="font-size: 0.8rem; color: #757575; width: 100%;">
     </div>
 </div>
             <div class="form-group phone-row">
@@ -212,10 +325,13 @@
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              
             </div>
         </div>
+
+        
 
         <div class="footer-col">
             <h3>Quick Links</h3>
@@ -224,8 +340,18 @@
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                   <a href="Career.html">Career</a>
-               <li><a href="LatestNews.html">Latest News</a></li>
+                  <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
+               
+
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
         </div>
@@ -234,16 +360,23 @@
             <h3>Contact Us</h3>
             <div class="contact-details">
                 <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
-                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-phone"></i> +27-765718894</p>
                 <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
                 <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
             </div>
         </div>
     </div>
+
     <div class="footer-bottom">
-        <p>© 2026 HULUTECH | All Rights Reserved</p>
+        <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
     </div>
 </footer>
+</div>
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
+</div>
+</section>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

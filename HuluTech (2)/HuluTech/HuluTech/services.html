@@ -107,12 +107,31 @@
     transform: scale(1.1);
     filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.7));
 }
+/* 1. Ensure headings don't 'trap' the link */
+.glass-card h3, .glass-card .card-title { 
+    margin-bottom: 30px !important; /* Increased space below the title */
+    display: block;
+}
 
-/* Match the 'Learn More' arrow to the same yellow */
+/* 2. Push the Learn More link further down */
 .learn-more {
     color: #FFCC00 !important;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    
+    display: block !important; 
+    width: 100%;
+    
+    /* THE KEY CHANGE: Increase this value to push it further down */
+    margin-top: 10px !important; 
+    
+    text-align: right;
+    padding-bottom: 5px;
 }
+
 /* --- UPDATED SERVICE CARDS WITH MUSTARD BOTTOM LINE --- */
 .glass-card {
     background: rgba(15, 23, 42, 0.7) !important;
@@ -300,7 +319,7 @@
       <a href="Career.html">Careers</a>
       <a href="Partnership.html">Partnerships</a>
       <a href="contact.html">Contact</a>
-      <a href="LatestNews.html">LatestNews</a>
+     
   </nav>
 </header>
 
@@ -475,15 +494,45 @@
   </div>
 </div>
 
+<section class="testimonials">
+    <h2>What Our Clients Say</h2>
+    <div class="testimonial-slider">
+        <div class="testimonial active">
+            <img src="images/productivity.sa.png" alt="Nkululeko Jele" class="testimonial-img">
+            <p>"Hulutech guided our organisation through a phased adoption of Microsoft Azure and Microsoft 365, helping us modernise legacy workloads while reinforcing governance and security."</p>
+            <h4>Head of ICT and Facilities, Productivity SA</h4>
+        </div>
+        <div class="testimonial">
+            <img src="images/minthoney.jpeg" alt="Gundo Kwinda" class="testimonial-img">
+            <p>"Hulutech’s consultants distinguished themselves by mapping a cloud roadmap that aligned precisely with our productivity-improvement mandate and quality framework."</p>
+            <!--h4>Head: ICT and Facilities, Mint and Honey (Pty) Ltd</h4 -->
+        </div>
+        <div class="testimonial">
+            <img src="images/inzaloems.png" alt="Gerrit Deyzel" class="testimonial-img">
+            <p>"Hulutech has consistently demonstrated deep technical knowledge, strong project execution, and a proactive support model tailored to our business needs."</p>
+            <!-- h4>Inzalo Enterprise Management Systems</h4 -->
+        </div>
+        <div class="testimonial">
+            <img src="images/masana_logo.jpeg" alt="Kenneth Molomo" class="testimonial-img">
+            <p>"Hulutech provides us with advanced services regarding the Microsoft cloud platform technology stack using TOGAF methodologies with committed service delivery."</p>
+            <!-- h4>Head: IT and Systems, Masana Petroleum Solutions</h4 -->
+        </div>
+    </div>
+</section>
+
+
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              
             </div>
         </div>
+
+        
 
         <div class="footer-col">
             <h3>Quick Links</h3>
@@ -491,9 +540,19 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
-                <li><a href="Career.html">Career</a></li>
-                 <li><a href="LatestNews.html">Latest News</a></li>
+                  <a href="Career.html">Career</a>
+                  <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
+               
+
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
         </div>
@@ -502,18 +561,20 @@
             <h3>Contact Us</h3>
             <div class="contact-details">
                 <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
-                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-phone"></i> +27-765718894</p>
                 <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
-             <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
+                <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
             </div>
         </div>
     </div>
-    
 
     <div class="footer-bottom">
         <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
     </div>
 </footer>
+</div>
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
+</div>
+</section>
 
-</body>
-</html>

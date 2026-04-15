@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <title>HULUTECH | Innovate. Secure. Transform.</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +44,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+      
     </nav>
 </header>
 </header>
@@ -577,7 +578,83 @@ body { font-family: 'Inter', sans-serif; }
             .news-grid { grid-template-columns:1fr; }
             .n-meta { display:none; }
             #heroNotices { max-width:100%; }
-        }
+        }.marquee-hero-container {
+    /* Position it at the top of the hero section */
+    position: absolute;
+    top: -120px; /* Adjust this number to move it higher or lower under the navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100; /* Keeps it on top of the background graphics */
+
+    /* Your existing styles */
+    background: #E1AD01; 
+    color: #000;
+    height: 48px;
+    width: 100vw; /* Adjust width as needed */
+    max-width: 1500px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Container for the static tags */
+.marquee-labels {
+    display: flex;
+    height: 100%;
+    z-index: 20;
+    position: absolute;
+    left: 0;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* The LIVE part */
+.live-tag {
+    background: #000;
+    color: #ffffff;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #333;
+}
+
+/* The BLOG NEWS part you asked for */
+.category-tag {
+    background: #1a1a1a;
+    color: #E1AD01;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+}
+
+/* The scrolling area */
+.marquee-hero-scroll {
+    display: flex;
+    white-space: nowrap;
+    padding-left: 200px; /* Pushes text past the static labels */
+    animation: rotate-marquee 25s linear infinite;
+}
+
+.marquee-hero-scroll span {
+    padding-right: 80px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+@keyframes rotate-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Pause on hover */
+.marquee-hero-container:hover .marquee-hero-scroll {
+    animation-play-state: paused;
+}
 </style>
 </head>
 
@@ -589,7 +666,13 @@ body { font-family: 'Inter', sans-serif; }
 <section class="relative flex items-center justify-center text-center px-6 md:px-16 min-h-screen bg-cover bg-center bg-no-repeat"
 style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25)), url('images/background5.png');">
 
+
   <div class="max-w-3xl animate-slide-in">
+
+  <a href="latestnews.html" 
+   id="heroNotices" 
+   class="mt-4 w-full max-w-4xl mx-auto block cursor-pointer">
+</a>
 
     <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-white mb-6">
        We help businesses stay secure, innovative, and future‑proof.
@@ -608,57 +691,45 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 
     <div>
 
-         <h3 class="text-3xl font-bold text-white">15+</h3>
+     
 
-      <h3 class="text-3xl font-bold text-white">15+</h3>
+      <h3 class="text-3xl font-bold text-white">5+</h3>
 
       <p class="text-sm uppercase tracking-wide">Years Experience</p>
     </div>
 
     <div>
-      <h3 class="text-3xl font-bold text-white">120+</h3>
+      <h3 class="text-3xl font-bold text-white">10+</h3>
       <p class="text-sm uppercase tracking-wide">Projects Delivered</p>
     </div>
 
     <div>
-      <h3 class="text-3xl font-bold text-white">98%</h3>
+      <h3 class="text-3xl font-bold text-white">100%</h3>
       <p class="text-sm uppercase tracking-wide">Client Retention</p>
     </div>
 
   </div>
 
-    <!-- CTA BUTTONS -->
-    <div class="flex flex-wrap justify-center gap-4">
+  <section class="hero-section">
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href="contact.html" class="inline-block bg-[#E1AD01] hover:bg-[#c89600] text-black px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-300">
+      Book a Consultation
+    </a>
+    <a href="services.html" class="border border-white hover:bg-white hover:text-[#06122b] px-6 py-3 rounded-lg font-semibold transition duration-300">
+      Quick View Services
+    </a>
+  </div>
 
-      <a href="contact.html" class="inline-block bg-[#E1AD01] hover:bg-[#c89600] text-black px-8 py-3 rounded-lg font-semibold shadow-lg transform hover:-translate-y-1 transition duration-300 ease-in-out">
-        Book a Consultation
-      </a>
+ 
 
-      <a href="services.html" class="border border-white hover:bg-white hover:text-[#06122b] px-6 py-3 rounded-lg font-semibold transition duration-300">
-        Quick View Services
-      </a>
-
-    </div>
-
+</section>
   </div>
 </section>
 
 
 
 
-            <!-- ★ IMPORTANT NOTICES APPEAR HERE ★ -->
-            <div id="heroNotices"></div>
-        </div>
-    </div>
-</section>
-<!-- NEWSFEED -->
-<section id="newsfeed">
-    <div class="container newsfeed-container">
-        <h2 class="section-title">Latest News</h2>
-        <div class="marquee" id="marqueeBar" style="display:none;"><span id="marqueeText"></span></div>
-        <div class="news-grid" id="newsGrid"></div>
-    </div>
-</section>
+           
 
 
 
@@ -751,17 +822,30 @@ function renderHeroNotices() {
         el.addEventListener('click', () => openModal(n));
         wrap.appendChild(el);
     });
-}
-
-/* --- Marquee --- */
+}/* --- BLOG NEWS MARQUEE --- */
 function renderMarquee() {
-    const bar  = document.getElementById('marqueeBar');
-    const text = document.getElementById('marqueeText');
-    const items = DB.filter(n => n.showMarquee);
+    const container = document.getElementById('heroNotices'); 
+    const items = DB.filter(n => n.showMarquee === true);
+    
     if (items.length) {
-        text.textContent = items.map(n => `⭐ ${n.title}`).join('   •   ');
-        bar.style.display = 'block';
-    } else { bar.style.display = 'none'; }
+        const marqueeText = items.map(n => `⭐ ${n.title}`).join(' &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ');
+        
+        container.innerHTML = `
+            <div class="marquee-hero-container">
+                <div class="marquee-labels">
+                    <span class="live-tag">LIVE</span>
+                    <span class="category-tag">BLOG NEWS</span>
+                </div>
+                
+                <div class="marquee-hero-scroll">
+                    <span>${marqueeText}</span>
+                    <span>${marqueeText}</span>
+                </div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = ''; 
+    }
 }
 
 /* --- News grid (non-important items) --- */
@@ -792,31 +876,6 @@ function renderNewsGrid() {
 </body>
 </html>
 
-<section class="testimonials">
-    <h2>What Our Clients Say</h2>
-    <div class="testimonial-slider">
-        <div class="testimonial active">
-            <img src="images/productivity.sa.png" alt="Nkululeko Jele" class="testimonial-img">
-            <p>"Hulutech guided our organisation through a phased adoption of Microsoft Azure and Microsoft 365, helping us modernise legacy workloads while reinforcing governance and security."</p>
-            <h4>Head of ICT and Facilities, Productivity SA</h4>
-        </div>
-        <div class="testimonial">
-            <img src="images/minthoney.jpeg" alt="Gundo Kwinda" class="testimonial-img">
-            <p>"Hulutech’s consultants distinguished themselves by mapping a cloud roadmap that aligned precisely with our productivity-improvement mandate and quality framework."</p>
-            <!--h4>Head: ICT and Facilities, Mint and Honey (Pty) Ltd</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/inzaloems.png" alt="Gerrit Deyzel" class="testimonial-img">
-            <p>"Hulutech has consistently demonstrated deep technical knowledge, strong project execution, and a proactive support model tailored to our business needs."</p>
-            <!-- h4>Inzalo Enterprise Management Systems</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/masana_logo.jpeg" alt="Kenneth Molomo" class="testimonial-img">
-            <p>"Hulutech provides us with advanced services regarding the Microsoft cloud platform technology stack using TOGAF methodologies with committed service delivery."</p>
-            <!-- h4>Head: IT and Systems, Masana Petroleum Solutions</h4 -->
-        </div>
-    </div>
-</section>
 
 
 
@@ -825,11 +884,13 @@ function renderNewsGrid() {
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
               
             </div>
         </div>
+
+        
 
         <div class="footer-col">
             <h3>Quick Links</h3>
@@ -840,8 +901,17 @@ function renderNewsGrid() {
                   <a href="Career.html">Career</a>
                   <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
-               <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+               
 
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
+                <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
         </div>
 
@@ -861,7 +931,8 @@ function renderNewsGrid() {
     </div>
 </footer>
 </div>
-
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
 </div>
 </section>
 

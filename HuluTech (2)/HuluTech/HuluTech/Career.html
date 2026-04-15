@@ -6,9 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
      <link rel="stylesheet" href="css/privacy.css">
+     <link rel="stylesheet" href="css/style.css">
 
 <script src="js/privacy.js" defer></script>
-    <style>
+    <style>/* FORCE WHITE NAVBAR */
+.site-header {
+    background-color: #ffffff !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 8%;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* FORCE NAVY LINKS */
+#nav-links a {
+    color: #0a192f !important; 
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    border-bottom: 2px solid transparent;
+}
+
+/* MUSTARD HOVER */
+#nav-links a:hover {
+    color: #E1AD01 !important;
+    border-bottom: 2px solid #E1AD01;
+}
         /* --- YOUR ORIGINAL CSS FIXES --- */
         .social-icons a i {
             color: #FFB800 !important;
@@ -425,7 +452,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+       
     </nav>
 </header>
 
@@ -510,39 +537,62 @@
 
 <footer class="main-footer">
     <div class="footer-container">
-        <div class="footer-col">
-            <h2>CONNECT</h2>
+        <div class="footer-col brand-col">
+            <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://wa.me/27765718894" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              
             </div>
         </div>
+
+        
+
         <div class="footer-col">
             <h3>Quick Links</h3>
             <ul class="footer-links-list">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
-                <li><a href="Career.html">Career</a></li>
-                 <li><a href="LatestNews.html">Latest News</a></li>
+                  <a href="Career.html">Career</a>
+                  <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
-                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+               
+
             </ul>
         </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
+                <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+            </ul>
+        </div>
+
         <div class="footer-col">
             <h3>Contact Us</h3>
             <div class="contact-details">
                 <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
-                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-phone"></i> +27-765718894</p>
                 <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
                 <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
             </div>
         </div>
     </div>
+
     <div class="footer-bottom">
-        <p>© 2026 HULUTECH | All Rights Reserved</p>
+        <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
     </div>
 </footer>
+</div>
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
+</div>
+</section>
+
+
 
 <script>
     // --- JOB DATABASE ---

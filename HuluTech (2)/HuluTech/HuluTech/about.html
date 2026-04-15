@@ -153,7 +153,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+       
     </nav>
 </header>
 
@@ -231,13 +231,12 @@
             </div>
         </section>
     </div>
-
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
@@ -249,11 +248,17 @@
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                 <li><a href="Career.html">Career</a></li>
-              <li><a href="LatestNews.html">Latest News</a></li>
+                <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+                <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+                <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
-                
-                
             </ul>
         </div>
 
@@ -261,8 +266,9 @@
             <h3>Contact Us</h3>
             <div class="contact-details">
                 <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
-                <p><i class="fas fa-phone"></i> +27 61 587-0933</p>
+                <p><i class="fas fa-phone"></i> +27-765718894</p>
                 <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
+                <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
             </div>
         </div>
     </div>
@@ -270,23 +276,40 @@
     <div class="footer-bottom">
         <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
     </div>
+</footer>
+
+<script src="js/terms.js"></script>
+<script src="js/paia.js"></script>
+
 <script>
     function showTab(tabId) {
+        // Find all tab content elements
         const tabs = document.getElementsByClassName('about-tab-content');
+        
+        // Hide all tabs
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].style.display = 'none';
         }
+        
+        // Show the specific requested tab
         const target = document.getElementById(tabId);
-        if(target) target.style.display = 'block';
+        if (target) {
+            target.style.display = 'block';
+        }
+        
+        // Scroll to top so the user sees the start of the content
         window.scrollTo(0, 0);
     }
 
+    // Logic to run when the page loads
     window.addEventListener('DOMContentLoaded', () => {
         const params = new URLSearchParams(window.location.search);
         const tab = params.get('tab');
+        
         if (tab === 'team') {
             showTab('team-tab');
         } else {
+            // Default tab if no parameter is provided
             showTab('story-tab');
         }
     });

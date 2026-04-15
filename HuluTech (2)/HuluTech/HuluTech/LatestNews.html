@@ -43,7 +43,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-       <a href="LatestNews.html">LatestNews</a>
+      
     </nav>
 </header>
 </header>
@@ -651,7 +651,137 @@ body { font-family: 'Inter', sans-serif; }
 .news-container {
     padding-top: 0 !important;
     margin-top: 0 !important;
+}/* 1. Base state: Clamped to 3 lines */
+.card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    transition: max-height 0.3s ease-in-out; /* Smooth growth */
+    color: #eee;
+    max-height: 4.8em; /* Approximate height for 3 lines */
 }
+
+/* 2. Expanded state: Show EVERYTHING */
+.card-desc.expanded {
+    display: block !important; /* Disables the 3-line limit */
+    -webkit-line-clamp: unset !important;
+    max-height: 5000px !important; /* Allows it to grow to full size */
+    overflow: visible !important;
+}
+
+/* 3. Style for the button when it is active */
+.btn-active-view {
+    background: #FFC107 !important;
+    color: #000 !important;
+}.card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card-desc.expanded {
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    max-height: none !important;
+}/* Base state for the description */
+.card-desc {
+    display: block; /* Change from -webkit-box to block to allow scrolling */
+    max-height: 200px; /* Set a fixed height so it's scrollable */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    margin-bottom: 15px;
+    padding-right: 5px; /* Space for the scrollbar */
+}
+
+/* Custom Scrollbar Styling (Matches your Gold/Dark theme) */
+.card-desc::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-desc::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.card-desc::-webkit-scrollbar-thumb {
+    background: #FFC107; /* Your Gold color */
+    border-radius: 10px;
+}
+
+/* Expanded state for when you click 'View More' */
+.card-desc.expanded {
+    max-height: none !important;
+    overflow-y: visible !important;
+}/* Base state (Collapsed) */
+.card-desc {
+    display: block; 
+    max-height: 150px; /* Short height for initial view */
+    overflow-y: auto;  
+    margin-bottom: 15px;
+    padding-right: 8px;
+    transition: max-height 0.4s ease; /* Smooth expansion */
+}
+
+/* Expanded state (Still Scrollable, just bigger) */
+.card-desc.expanded {
+    max-height: 450px !important; /* Adjust this to how much you want to show */
+    overflow-y: auto !important;  /* Keeps the scrollbar active */
+    border-bottom: 1px solid rgba(255, 193, 7, 0.2); /* Optional: gold border at bottom */
+}
+
+/* Custom Scrollbar (Same as your Gold theme) */
+.card-desc::-webkit-scrollbar {
+    width: 6px;
+}
+.card-desc::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.card-desc::-webkit-scrollbar-thumb {
+    background: #FFC107;
+    border-radius: 10px;
+}/* 1. The Container for the text and buttons */
+.card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Important: card body takes full height */
+}
+
+/* 2. The scrollable description */
+.card-desc {
+    display: block; 
+    max-height: 150px; 
+    overflow-y: auto;  
+    flex: 1; /* This pushes the buttons down */
+    margin-bottom: 15px;
+    padding-right: 8px;
+    transition: max-height 0.4s ease;
+}
+
+/* 3. The Expanded state (still scrolls, doesn't hide buttons) */
+.card-desc.expanded {
+    max-height: 400px !important; 
+    overflow-y: auto !important;
+}
+
+/* 4. The Action Bar (Pinned to bottom) */
+.card-actions {
+    margin-top: auto; /* Pushes the buttons to the bottom of the flex container */
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Subtle line to separate */
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Scrollbar Styling (Matches Hulutech Gold) */
+.card-desc::-webkit-scrollbar { width: 5px; }
+.card-desc::-webkit-scrollbar-thumb { background: #FFC107; border-radius: 10px; }
+.card-desc::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
 </style>
 </head>
 
@@ -782,29 +912,38 @@ function renderMarquee() {
 }*/
 
 /* --- News grid (non-important items) --- */
+/* --- News grid (non-important items) --- */
 function renderNewsGrid() {
     const grid = document.getElementById('newsGrid');
     const regular = DB.filter(n => !n.isImportant);
     grid.innerHTML = '';
+    
     if (!regular.length) {
         grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news yet !</p>';
         return;
     }
+    
     regular.forEach(n => {
         const card = document.createElement('div');
         card.className = 'news-card';
+
+        // --- PUT THE UPDATED CODE RIGHT HERE ---
         card.innerHTML = buildCardMediaHTML(n) + `
             <div class="card-body">
                 <span class="card-type">${x(n.type)}</span>
                 <div class="card-title">${x(n.title)}</div>
-                <div class="card-desc">${x(n.content)}</div>
+                
+                <div id="desc-${n.id}" class="card-desc">${x(n.content)}</div>
+                
                 <div class="card-date">${n.date}</div>
-                <div class="card-actions">${buildCardBtns(n)}</div>
+                <div class="card-actions">
+                    ${buildCardBtns(n)} 
+                    </div>
             </div>`;
+        
         grid.appendChild(card);
     });
 }
-
 function buildCardMediaHTML(n) {
     if (n.mediaType === 'none' || !n.mediaUrl) return '';
     if (n.mediaType === 'image') {
@@ -823,20 +962,18 @@ function buildCardMediaHTML(n) {
                 <div class="card-doc-icon">📄</div>
                 <div class="card-doc-name">${x(n.mediaName || 'Document')}</div>
             </div>
-     <div id="view-container" style="display:none; width:100%; max-width:900px; margin: 25px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
-    
-    <div style="background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FFC107;">
-        <div style="display: flex; align-items:center; gap: 8px;">
-            <span style="background: #FFC107; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">PDF</span>
-            <span style="color: #eee; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;">DOCUMENT PREVIEW</span>
-        </div>
-        <div style="font-size: 11px; color: #888; text-transform: uppercase;">Secure Viewer</div>
-    </div>
-
-    <div style="position: relative; background: #525659; height: 600px;">
-        <iframe name="pdf-frame" width="100%" height="100%" style="border:none; display: block;"></iframe>
-    </div>
-</div>
+            <div id="view-container-${n.id}" style="display:none; width:100%; max-width:900px; margin: 25px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                <div style="background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FFC107;">
+                    <div style="display: flex; align-items:center; gap: 8px;">
+                        <span style="background: #FFC107; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">PDF</span>
+                        <span style="color: #eee; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;">DOCUMENT PREVIEW</span>
+                    </div>
+                    <div style="font-size: 11px; color: #888; text-transform: uppercase;">Secure Viewer</div>
+                </div>
+                <div style="position: relative; background: #525659; height: 600px;">
+                    <iframe name="pdf-frame-${n.id}" width="100%" height="100%" style="border:none; display: block;"></iframe>
+                </div>
+            </div>
         </div>`;
     }
     return '';
@@ -844,23 +981,28 @@ function buildCardMediaHTML(n) {
 
 function buildCardBtns(n) {
     let b = '';
+    
+    // 1. Primary Action (Link)
     if (n.link) b += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="ca-btn ca-primary">Read More →</a>`;
+    
+    // 2. Media Actions
     if (n.mediaType === 'image' && n.mediaUrl)
         b += `<button class="ca-btn ca-ghost" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 Full Image</button>`;
+    
     if (n.mediaType === 'video' && n.mediaUrl)
         b += `<button class="ca-btn ca-cyan" onclick="this.closest('.news-card').querySelector('video').play()">▶ Play</button>`;
-    if (n.mediaType === 'document' && n.mediaUrl)
+    
+    if (n.mediaType === 'document' && n.mediaUrl) {
         b += `<a href="${n.mediaUrl}" target="_blank" download="${x(n.mediaName||'file')}" class="ca-btn ca-ghost">⬇ Download</a>`;
-   if (n.mediaType === 'document' && n.mediaUrl) {
-    // We add an ID to the button and a custom function 'toggleViewer'
-    b += `<a href="${n.mediaUrl}" 
-             id="view-btn"
-             target="pdf-frame" 
-             onclick="toggleViewer(this, '${n.mediaUrl}')"
-             class="ca-btn ca-ghost">👁 view</a>`;
-}
-    if (!b)
-        b = `<button class="ca-btn ca-ghost" onclick="shareItem('${esc4js(n.title)}')">🔗 Share</button>`;
+        b += `<a href="${n.mediaUrl}" target="pdf-frame-${n.id}" onclick="toggleViewer(this, '${n.mediaUrl}', ${n.id})" class="ca-btn ca-ghost">👁 view</a>`;
+    }
+
+    // 3. Standard Actions (Always Shown)
+    b += `<button class="ca-btn ca-ghost" onclick="shareItem('${esc4js(n.title)}')">🔗 Share</button>`;
+    
+    // 4. THE VIEW MORE BUTTON (Added here)
+    b += `<button class="ca-btn ca-ghost" id="btn-toggle-${n.id}" onclick="toggleContent(${n.id})">📄 View More</button>`;
+    
     return b;
 }
 
@@ -1084,6 +1226,51 @@ document.addEventListener('keydown', e => {
         closeFS();
     }
 });
+function toggleContent(id) {
+    const desc = document.getElementById(`desc-${id}`);
+    const btn = document.getElementById(`btn-toggle-${id}`);
+    const card = btn.closest('.news-card');
+    
+    // Check if we are opening or closing
+    const isOpening = !desc.classList.contains('expanded');
+
+    if (isOpening) {
+        // OPEN: Add class and update button
+        desc.classList.add('expanded');
+        btn.innerHTML = '✖ Close';
+        btn.classList.add('btn-active-view');
+        
+        // Optional: Smooth scroll into the new text
+        setTimeout(() => {
+            desc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 50);
+    } else {
+        // CLOSE: Remove class and update button
+        desc.classList.remove('expanded');
+        btn.innerHTML = '👁 View More';
+        btn.classList.remove('btn-active-view');
+        
+        // SCROLL: Jump back to the top of the card
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}function toggleContent(id) {
+    const desc = document.getElementById(`desc-${id}`);
+    const btn = document.getElementById(`btn-toggle-${id}`);
+    const card = btn.closest('.news-card');
+    
+    if (!desc.classList.contains('expanded')) {
+        desc.classList.add('expanded');
+        btn.innerHTML = '✖ Close';
+        btn.style.background = "#FFC107";
+        btn.style.color = "#000";
+    } else {
+        desc.classList.remove('expanded');
+        btn.innerHTML = '📄 View More';
+        btn.style.background = "transparent";
+        btn.style.color = "";
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
 </script>
 </body>
 </html>
@@ -1092,17 +1279,18 @@ document.addEventListener('keydown', e => {
 </section>
 
 
-
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
               
             </div>
         </div>
+
+        
 
         <div class="footer-col">
             <h3>Quick Links</h3>
@@ -1113,8 +1301,17 @@ document.addEventListener('keydown', e => {
                   <a href="Career.html">Career</a>
                   <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
-               <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
+               
 
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
+                <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
         </div>
 
@@ -1134,7 +1331,9 @@ document.addEventListener('keydown', e => {
     </div>
 </footer>
 </div>
-
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
 </div>
 </section>
+
 

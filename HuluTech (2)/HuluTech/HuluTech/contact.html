@@ -14,6 +14,44 @@
 <script src="js/privacy.js" defer></script>
 
     <style>
+        /* 1. Fix the dropdown container color and text */
+.iti__country-list {
+    background-color: #1a1a1a !important; /* Match your dark theme */
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.1);
+    max-width: 300px; /* Prevents it from being too wide */
+}
+
+/* 2. Fix hover state for countries */
+.iti__country:hover, .iti__highlight {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+
+/* 3. Ensure the text inside the list is aligned properly */
+.iti__country-name {
+    color: #ccc;
+    margin-right: 6px;
+}
+
+.iti__dial-code {
+    color: #888;
+}
+
+/* 4. Fix the alignment of the search/input area if needed */
+.iti {
+    width: 100%; /* Make sure the widget takes full width of your form group */
+    margin-bottom: 15px;
+}
+
+/* 5. Match your input's bottom border style */
+.iti input {
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    background: transparent !important;
+    color: white !important;
+    border-radius: 0 !important;
+    padding-left: 50px !important; /* Space for the flag */
+}
         /* --- NAVIGATION DROPDOWN FIX --- */
         .dropdown {
             position: relative;
@@ -220,7 +258,7 @@
         <a href="Career.html">Careers</a>
         <a href="Partnership.html">Partnerships</a>
         <a href="contact.html">Contact</a>
-        <a href="LatestNews.html">LatestNews</a>
+
     </nav>
 </header>
 
@@ -303,39 +341,59 @@
         <div class="footer-col brand-col">
             <h2 class="footer-logo">Connect</h2>
             <div class="social-icons">
-                <a href="https://www.linkedin.com/company/hulutech" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://wa.me/27765718894" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.linkedin.com/company/hulutech-pty-ltd/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://wa.me/27765718894" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+              
             </div>
         </div>
 
-          <div class="footer-col">
+        
+
+        <div class="footer-col">
             <h3>Quick Links</h3>
             <ul class="footer-links-list">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">Our Story</a></li>
                 <li><a href="services.html">Services</a></li>
                   <a href="Career.html">Career</a>
-                 <li><a href="LatestNews.html">Latest News</a></li>
+                  <li><a href="LatestNews.html">Latest News</a></li>
                 <li><a href="contact.html">Get In Touch</a></li>
+               
+
+            </ul>
+        </div>
+
+        <div class="footer-col">
+            <h3>Legal</h3>
+            <ul class="footer-links-list">
+               <li><a href="javascript:void(0)" id="paiaLink">PAIA Manual</a></li>
+              <li><a href="javascript:void(0)" id="termsLink">Website Terms and Conditions</a></li>
                 <li><a href="javascript:void(0)" id="privacyLink">Privacy Policy</a></li>
             </ul>
         </div>
 
         <div class="footer-col">
             <h3>Contact Us</h3>
-       
-               <div class="contact-details">
+            <div class="contact-details">
                 <p><i class="fas fa-map-marker-alt"></i> Johannesburg, South Africa</p>
-                <p><i class="fas fa-phone"></i>+27 61 587-0933</p>
+                <p><i class="fas fa-phone"></i> +27-765718894</p>
                 <p><i class="fas fa-envelope"></i> info@hulutech.co.za</p>
-             <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
+                <p><i class="fas fa-clock"></i> Mon-Fri : 08:00-17:00</p>
             </div>
         </div>
     </div>
+
     <div class="footer-bottom">
-        <p>© 2026 HULUTECH | All Rights Reserved</p>
+        <p>&copy; 2026 HULUTECH | All Rights Reserved</p>
     </div>
 </footer>
+</div>
+<script src="js/terms.js"></script>
+    <script src="js/paia.js"></script> </body>
+</div>
+</section>
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
@@ -347,14 +405,14 @@
     const phoneInput = document.querySelector("#phone");
 
     // 2. INITIALIZE PHONE INPUT (iti)
-    let iti;
+    /*let iti;
     if (phoneInput) {
         iti = window.intlTelInput(phoneInput, {
             initialCountry: "za",
             separateDialCode: true,
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
         });
-    }
+    }*/
 
     // 3. FORM SUBMISSION LOGIC
     if (form) {
@@ -564,6 +622,7 @@ window.deleteContact = async function(id) {
     const res = await fetch(`http://localhost:5000/api/contact/${id}`, { method: 'DELETE' });
     if (res.ok) loadContactsAdmin(); // Refresh list
 };
+
 </script>
 </body>
 </html>

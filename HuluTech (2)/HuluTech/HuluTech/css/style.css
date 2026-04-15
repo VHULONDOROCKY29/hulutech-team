@@ -34,7 +34,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 8%;
-  background: var(--primary-navy);
+  background: #ffffff;
   
   /* border-bottom: 3px solid var(--accent-gold);*/
   
@@ -66,13 +66,25 @@ body {
 }
 
 #nav-links a {
-  color: var(--text-light);
-  text-decoration: none;
-  font-weight: 500;
-  transition: var(--transition);
+/* 1. This makes the links Navy Blue by default */
+    color: #0a192f !important; 
+    
+    text-decoration: none;
+    font-weight: 600; /* Bolded slightly to look better on white */
+    transition: 0.3s ease;
 }
 
-#nav-links a:hover { color: var(--accent-gold); }
+#nav-links a:hover { 
+    /* The Mustard Yellow color */
+    color: #E1AD01 !important; 
+    
+    /* The underline effect */
+    border-bottom: 2px solid #E1AD01;
+    
+    /* This ensures the underline doesn't "jump" the text up 
+       (Only works if you have a transparent border on the normal state) */
+    padding-bottom: 2px; 
+}
 
 /* HAMBURGER ICON FIX */
 .hamburger {
@@ -109,10 +121,10 @@ body {
    3. TESTIMONIALS (UPDATED & VISIBLE)
    ========================================= */
 .testimonials {
-  padding: 80px 8%;
-  background: #0f172a; /* Dark background for the whole section */
+  margin-top: -75px;  /* Increase this number to pull it higher */
+  padding: 10px 8%;    /* Keep padding positive */
   text-align: center;
-  color: #E1AD01;      /* Ensures all text inside is white */
+  color: #E1AD01;
 }
 
 .testimonial-slider {
@@ -145,12 +157,15 @@ body {
   margin-bottom: 20px;
 }
 
-.testimonial h4 {
-  color: #E1AD01; /* Orange for the name/title */
-  font-weight: 700;
-  margin-top: 15px;
+.testimonials h2 {
+  /* Scales perfectly: 1.8rem on small phones, 2.8rem on big desktops */
+  font-size: clamp(1.8rem, 6vw, 2.8rem); 
+  font-weight: 700;      /* Slightly thinner for better clarity */
+  margin-bottom: 30px;
+  color: #E1AD01;
+  line-height: 1.1;     /* Keeps lines close if they wrap on mobile */
+  text-align: center;
 }
-
 /* Restored missing image style */
 .testimonial-img {
   width: 100px;
@@ -167,7 +182,11 @@ body {
   from { opacity: 0; transform: translateY(10px); } 
   to { opacity: 1; transform: translateY(0); } 
 }
-
+@media (max-width: 768px) {
+  .testimonials h2 {
+    font-size: 2.2rem;
+  }
+}
 /* =========================================
    4. CONTACT PAGE
    ========================================= */
@@ -300,49 +319,7 @@ body {
   100% { transform: rotate(360deg); }
 }
 
-/* =========================================
-   5. FOOTER
-   ========================================= */
-.main-footer { 
-    background: var(--deep-black); 
-    color: white; 
-    padding: 60px 8% 20px; 
-    /* border-top: 3px solid var(--accent-gold); */ /* Removed as per your previous request */
-}
 
-.footer-container { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 40px; 
-}
-
-/* --- ADDED THE LINE LOGIC HERE --- */
-.footer-col h2, 
-.footer-col h3 { 
-    color: var(--accent-gold); 
-    margin-bottom: 25px; 
-    position: relative; 
-    display: inline-block; /* Essential for the line width */
-}
-
-.footer-col h2::after, 
-.footer-col h3::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -8px; /* Gap between text and line */
-    width: 30px;  /* Width of the underline */
-    height: 2px;  /* Thickness of the underline */
-    background-color: var(--accent-gold);
-}
-
-.footer-bottom { 
-    text-align: center; 
-    padding-top: 20px; 
-    border-top: 1px solid rgba(255,255,255,0.1); 
-    color: #64748b; 
-    margin-top: 40px; 
-}
 /* =========================================
    6. RESPONSIVE DESIGN (FIXED MOBILE MENU)
    ========================================= */
@@ -1112,6 +1089,7 @@ body {
 }
 .apply-close-btn:hover { color: #111; }
 
+
 /* LOGO */
 .logo img {
     height: 55px;      /* Bigger logo */
@@ -1706,3 +1684,91 @@ body {
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast; /* Forces the browser to keep it sharp */
 }
+/* =========================================
+   HULUTECH UNIVERSAL FOOTER LOCK 
+   (Matches Index Style to All Pages)
+   ========================================= */
+
+/* 1. Force the Footer Container to stay consistent */
+.main-footer { 
+    background: #000511 !important; /* Your deep navy/black */
+    color: #ffffff !important; 
+    padding: 60px 8% 20px !important; 
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.footer-container { 
+    display: grid !important; 
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important; 
+    gap: 40px !important; 
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+    align-items: start !important;
+}
+
+/* 2. Fix Heading Sizes & Weights (The main issue) */
+.footer-col h2, 
+.footer-col h3 { 
+    color: #E1AD01 !important; /* Mustard Gold */
+    font-size: 22px !important;  /* Standardized Size from Index */
+    font-weight: 800 !important; /* Heavy Bold */
+    text-transform: uppercase !important;
+    margin-bottom: 25px !important;
+    position: relative !important; 
+    display: inline-block !important;
+    font-family: 'Poppins', sans-serif !important;
+    line-height: 1.2 !important;
+}
+
+/* 3. Force the Mustard Underline */
+.footer-col h2::after, 
+.footer-col h3::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 0 !important;
+    bottom: -8px !important;
+    width: 30px !important;  
+    height: 2px !important;  
+    background-color: #E1AD01 !important;
+}
+
+/* 4. Standardize Links & Contact Text */
+.footer-links-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.footer-links-list li {
+    margin-bottom: 12px !important;
+}
+
+.footer-links-list a, 
+.contact-details p {
+    font-size: 15px !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    font-weight: 400 !important;
+    opacity: 1 !important;
+}
+
+/* 5. Fix Icon Colors and Sizes */
+.social-icons a i, 
+.contact-details i {
+    color: #E1AD01 !important;
+    font-size: 18px !important;
+    margin-right: 10px !important;
+}
+
+/* 6. Footer Bottom Bar Reset */
+.footer-bottom { 
+    text-align: center !important; 
+    padding-top: 20px !important; 
+    border-top: 1px solid rgba(255,255,255,0.1) !important; 
+    color: #64748b !important; 
+    margin-top: 40px !important;
+    width: 100% !important;
+}
+

@@ -1,16 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inject the Detailed HTML Modal
+    // 1. Inject Responsive & Custom Scrollbar CSS
+    const style = document.createElement('style');
+    style.innerHTML = `
+        #privacyModal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #privacyModal .modal-content {
+            background: #0f172a;
+            border: 2px solid #E1AD01;
+            border-radius: 20px;
+            padding: 25px;
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(0,0,0,1);
+            margin: auto;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Smooth Scrollbar to match your brand */
+        .policy-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .policy-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .policy-container::-webkit-scrollbar-thumb {
+            background: #E1AD01;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .btn-group { flex-direction: column; gap: 10px !important; }
+            #privacyModal .modal-content { width: 92%; padding: 20px; }
+            #privacyModal h2 { font-size: 1.3rem; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 2. Inject the COMPLETE 12-Section HTML Modal
     const modalHTML = `
-    <div id="privacyModal" class="modal">
-      <div class="modal-content" id="modalContent" style="max-width: 700px; width: 95%;">
+    <div id="privacyModal">
+      <div class="modal-content" style="max-width: 700px; width: 95%;">
         <div id="policy-view">
-          <h2 style="color: #E1AD01; margin-bottom: 5px;">PRIVACY POLICY</h2>
-          <p style="color: #ccc; font-size: 0.8rem; margin-bottom: 15px;">Hulutech (Pty) Ltd | Last Updated: 2 April 2026</p>
+          <h2 style="color: #E1AD01; margin-bottom: 5px; text-align: center;">PRIVACY POLICY</h2>
+          <p style="color: #ccc; font-size: 0.75rem; margin-bottom: 15px; text-align: center;">Hulutech (Pty) Ltd | Last Updated: 2 April 2026</p>
           
-          <div style="text-align: left; background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; max-height: 350px; overflow-y: auto; margin-bottom: 20px; border: 1px solid rgba(225, 173, 1, 0.2); color: #fff;">
+          <div class="policy-container" style="text-align: left; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; max-height: 45vh; overflow-y: auto; margin-bottom: 20px; border: 1px solid rgba(225, 173, 1, 0.2); color: #fff; scroll-behavior: smooth;">
             
             <h3 style="color: #E1AD01; font-size: 1rem; margin-top: 0;">1. Introduction</h3>
-            <p>Hulutech (Pty) Ltd (“Hulutech”, “we”, “our”, or “us”) is committed to protecting your personal information and respecting your privacy. This policy is designed in accordance with the <strong>Protection of Personal Information Act (POPIA)</strong>.</p>
+            <p>Hulutech (Pty) Ltd is committed to protecting your personal information and respecting your privacy in accordance with <strong>POPIA</strong>.</p>
 
             <h3 style="color: #E1AD01; font-size: 1rem; margin-top: 15px;">2. Information We Collect</h3>
             <p>We collect Personal Identification (Name, Email, Phone, Company), Technical Data (IP address, usage logs), and Business Information required for service delivery.</p>
@@ -43,38 +91,38 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>This policy may be updated periodically. Changes will be posted here with a revised date.</p>
 
             <h3 style="color: #E1AD01; font-size: 1rem; margin-top: 15px;">12. Contact Information</h3>
-            <p>Hulutech (Pty) Ltd<br>Email: info@hulutech.co.za<br>Website: www.hulutech.co.za</p>
+            <p><strong>Hulutech (Pty) Ltd</strong><br>Email: info@hulutech.co.za<br>Website: www.hulutech.co.za</p>
           </div>
 
-          <div style="display: flex; justify-content: center; gap: 10px;">
-            <button id="acceptBtn" class="btn btn-accept">Accept & Continue</button>
-            <button id="rejectBtn" class="btn btn-reject">Decline</button>
+          <div class="btn-group" style="display: flex; justify-content: center; gap: 10px;">
+            <button id="acceptBtn" style="flex: 1; padding: 14px; border-radius: 10px; border: none; background: #E1AD01; color: #000; font-weight: 900; cursor: pointer; text-transform: uppercase;">Accept & Continue</button>
+            <button id="rejectBtn" style="flex: 1; padding: 14px; border-radius: 10px; border: 1px solid #E1AD01; background: transparent; color: #E1AD01; font-weight: 800; cursor: pointer; text-transform: uppercase;">Decline</button>
           </div>
         </div>
 
-        <div id="success-view" style="display: none;">
+        <div id="success-view" style="display: none; text-align: center;">
           <h2 style="color: #E1AD01;">✔ PREFERENCES SAVED</h2>
           <p>Thank you for trusting HULUTECH. You may now proceed.</p>
-          <button id="closeSuccess" class="btn btn-accept" style="width: 100%; margin-top: 15px;">Enter Site</button>
+          <button id="closeSuccess" style="width: 100%; padding: 14px; border-radius: 10px; border: none; background: #E1AD01; color: #000; font-weight: 900; margin-top: 20px; cursor: pointer; text-transform: uppercase;">Enter Site</button>
         </div>
       </div>
     </div>`;
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-    // ... (Keep the rest of your variables and logic below as they were)
     const modal = document.getElementById("privacyModal");
     const privacyLink = document.getElementById("privacyLink");
 
+    // Show if not accepted
     if (localStorage.getItem("privacyStatus") !== "accepted") {
-        modal.style.display = "block";
+        modal.style.display = "flex";
         document.body.style.overflow = "hidden";
     }
 
     if (privacyLink) {
         privacyLink.onclick = (e) => {
             e.preventDefault();
-            modal.style.display = "block";
+            modal.style.display = "flex";
             document.getElementById("policy-view").style.display = "block";
             document.getElementById("success-view").style.display = "none";
             document.body.style.overflow = "hidden";

@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    
 
 <header class="site-header">
     <div class="logo">
@@ -52,6 +53,7 @@
 
 
 <style>
+    
 </style>
 </head>
 
@@ -107,16 +109,23 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 
   </div>
 
-  <section class="hero-section">
+ <section class="hero-section">
   <div class="flex flex-wrap justify-center gap-4">
-    <a href="contact.html" class="inline-block bg-[#E1AD01] hover:bg-[#c89600] text-black px-8 py-3 rounded-lg font-semibold shadow-lg transition duration-300">
+    
+    <a href="contact.html" 
+       class="inline-block px-8 py-3 rounded-lg font-semibold shadow-lg"
+       style="background-color: #E1AD01 !important; color: #000000 !important;">
       Book a Consultation
     </a>
-    <a href="services.html" class="border border-white hover:bg-white hover:text-[#06122b] px-6 py-3 rounded-lg font-semibold transition duration-300">
+
+    <a href="services.html" 
+       class="inline-block border border-white px-6 py-3 rounded-lg font-semibold"
+       style="background-color: transparent !important; color: #ffffff !important;">
       Quick View Services
     </a>
-  </div>
 
+  </div>
+</section>
  
 
 </section>
@@ -130,7 +139,7 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 
 
 
-<div class="admin-toggle" onclick="toggleAdmin()">⚙ Admin</div>
+<!--<div class="admin-toggle" onclick="toggleAdmin()">⚙ Admin</div>
 
 <div class="admin-panel" id="adminPanel">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -138,7 +147,7 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
         <button class="mbtn mbtn-ghost" onclick="adminLogout()" style="font-size: 0.7rem; padding: 0.4rem 0.8rem; border: 1px solid #ff4444; color: #ff4444; background: transparent; cursor: pointer; border-radius: 4px;">
             <i class="fa-solid fa-power-off"></i> Logout
         </button>
-    </div>
+    </div>-->
 
 
   
@@ -147,7 +156,7 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 <!-- NOTICE MODAL -->
 <div class="modal-overlay" id="noticeModal" onclick="modalBgClick(event)">
     <div class="modal-box">
-        <button class="modal-x" onclick="closeModal()">&times;</button>
+       <!-- <button class="modal-x" onclick="closeModal()">&times;</button>-->
         <div class="modal-category" id="mCat"></div>
         <h3 id="mTitle"></h3>
         <div class="modal-media-wrap" id="mMedia" style="display:none;"></div>
@@ -157,49 +166,78 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
     </div>
 </div>
 
-<script>
-/* ================================================================
-   PERSISTENT DB
-================================================================ */
-let DB = [];
-let nid = 1;
-let pendingFile = null; // { dataUrl, name, rawMime }
 
-async function dbGet(k) {
-    if (window.storage) { try { const r = await window.storage.get(k); return r ? r.value : null; } catch(e){} }
-    return localStorage.getItem(k);
-}
-async function dbSet(k, v) {
-    if (window.storage) { try { await window.storage.set(k, v); return; } catch(e){} }
-    localStorage.setItem(k, v);
-}
+
+<script>/* ================================================================
+    BACKEND CONFIG & DB
+================================================================ */
+const API_URL = 'http://localhost:5000/api/news'; 
+let DB = [];
+let pendingFile = null; 
+
+// Load data from MongoDB
 async function loadDB() {
     try {
-        const raw = await dbGet('ht_v5');
-        if (raw) { DB = JSON.parse(raw); nid = DB.length ? Math.max(...DB.map(n=>n.id)) + 1 : 1; }
-    } catch(e) { DB = []; }
-    renderAll();
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Network response was not ok');
+        DB = await response.json();
+        renderAll();
+    } catch (e) {
+        console.error("Failed to load news:", e);
+        DB = []; 
+        renderAll();
+    }
 }
-async function saveDB() { await dbSet('ht_v5', JSON.stringify(DB)); }
+
 window.addEventListener('DOMContentLoaded', loadDB);
 
 /* ================================================================
-   RENDER ALL
+    RENDER ENGINE
 ================================================================ */
 const ICONS = { announcement:'📢', update:'🔄', event:'📅', achievement:'🏆' };
 
+/* --- Updated Render All --- */
 function renderAll() {
     renderHeroNotices();
-    renderMarquee();
     renderNewsGrid();
     renderMgmt();
+    renderMarquee(); // <--- This was the missing link!
+}function renderMarquee() {
+    const wrap = document.getElementById('marqueeContent');
+    if (!wrap) return;
+
+    // 1. Force clear any old hardcoded text
+    wrap.innerHTML = '';
+
+    // 2. Use the live 'DB' variable instead of localStorage
+    if (!DB || DB.length === 0) {
+        wrap.innerHTML = '<span>HULUTECH WILL KEEP IN TOUCH |  STAY TUNED FOR LIVE UPDATES</span>';
+        return;
+    }
+
+    // 3. Filter for items where showMarquee is true
+    // We check for both boolean true and string "true" to be safe
+    const mqItems = DB.filter(n => n.showMarquee === true || String(n.showMarquee) === 'true');
+
+    if (mqItems.length > 0) {
+        // 4. Build the ticker string
+        const tickerText = mqItems.map(n => 
+            `<span class="mq-item"><span class="mq-star">⭐</span> ${x(n.title).toUpperCase()}</span>`
+        ).join('    | ');
+
+        // 5. Inject with duplicated spans for the infinite scroll effect
+        wrap.innerHTML = `<span>${tickerText}</span><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${tickerText}</span>`;
+    } else {
+        // Fallback if no news items have "Show in Marquee" checked
+        wrap.innerHTML = '<span>HULUTECH WILL KEEP IN TOUCH| STAY TUNED FOR LIVE UPDATES</span>';
+    }
 }
 
-/* --- Hero important notices --- */
 function renderHeroNotices() {
     const wrap = document.getElementById('heroNotices');
+    if(!wrap) return;
     wrap.innerHTML = '';
-    const imp = DB.filter(n => n.isImportant);
+    const imp = DB.filter(n => n.isImportant).slice(0, 3);
     if (!imp.length) return;
     imp.forEach((n, i) => {
         const el = document.createElement('div');
@@ -219,62 +257,225 @@ function renderHeroNotices() {
         el.addEventListener('click', () => openModal(n));
         wrap.appendChild(el);
     });
-}/* --- BLOG NEWS MARQUEE --- */
-function renderMarquee() {
-    const container = document.getElementById('heroNotices'); 
-    const items = DB.filter(n => n.showMarquee === true);
-    
-    if (items.length) {
-        const marqueeText = items.map(n => `⭐ ${n.title}`).join(' &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; ');
-        
-        container.innerHTML = `
-            <div class="marquee-hero-container">
-                <div class="marquee-labels">
-                    <span class="live-tag">LIVE</span>
-                    <span class="category-tag">BLOG NEWS</span>
-                </div>
-                
-                <div class="marquee-hero-scroll">
-                    <span>${marqueeText}</span>
-                    <span>${marqueeText}</span>
-                </div>
-            </div>
-        `;
-    } else {
-        container.innerHTML = ''; 
-    }
 }
-
-/* --- News grid (non-important items) --- */
 function renderNewsGrid() {
     const grid = document.getElementById('newsGrid');
-    const regular = DB.filter(n => !n.isImportant);
+    if(!grid) return;
+    
+    // We are now using all items from the database
+    const allNews = DB; 
+    
     grid.innerHTML = '';
-    if (!regular.length) {
-        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news yet — open the Admin panel to publish your first post!</p>';
+    
+    if (!allNews.length) {
+        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news stories found.</p>';
         return;
     }
-    regular.forEach(n => {
+
+    // FIXED: Changed "regular.forEach" to "allNews.forEach"
+    allNews.forEach(n => {
         const card = document.createElement('div');
         card.className = 'news-card';
         card.innerHTML = buildCardMediaHTML(n) + `
             <div class="card-body">
                 <span class="card-type">${x(n.type)}</span>
                 <div class="card-title">${x(n.title)}</div>
-                <div class="card-desc">${x(n.content)}</div>
+                <div id="desc-${n._id}" class="card-desc">${x(n.content)}</div>
                 <div class="card-date">${n.date}</div>
-                <div class="card-actions">${buildCardBtns(n)}</div>
+                <div class="card-actions">
+                    ${buildCardBtns(n)} 
+                </div>
             </div>`;
         grid.appendChild(card);
     });
+}
+/* --- Card Helpers --- */
+function buildCardMediaHTML(n) {
+    if (n.mediaType === 'none' || !n.mediaUrl) return '';
+    if (n.mediaType === 'image') {
+        return `<div class="card-media"><img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')"></div>`;
+    }
+    if (n.mediaType === 'video') {
+        return `<div class="card-media"><video controls preload="metadata" src="${n.mediaUrl}"></video></div>`;
+    }
+    if (n.mediaType === 'document') {
+        return `<div class="card-media"><div class="card-doc"><div class="card-doc-icon">📄</div><div class="card-doc-name">${x(n.mediaName || 'Document')}</div></div></div>`;
+    }
+    return '';
+}
+
+function buildCardBtns(n) {
+    let b = '';
+    const id = n._id; 
+    if (n.link) b += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="ca-btn ca-primary">Read More →</a>`;
+    if (n.mediaType === 'image' && n.mediaUrl) b += `<button class="ca-btn ca-ghost" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 Full Image</button>`;
+    if (n.mediaType === 'document' && n.mediaUrl) b += `<a href="${n.mediaUrl}" target="_blank" download="${x(n.mediaName||'file')}" class="ca-btn ca-ghost">⬇ Download</a>`;
+    b += `<button class="ca-btn ca-ghost" onclick="shareItem('${esc4js(n.title)}')">🔗 Share</button>`;
+    b += `<button class="ca-btn ca-ghost" id="btn-toggle-${id}" onclick="toggleContent('${id}')">📄 View More</button>`;
+    return b;
+}
+
+/* ================================================================
+    CREATE / DELETE (MONGODB API)
+================================================================ */async function addNews(e) {
+    if (e) e.preventDefault();
+    
+    const mt = document.getElementById('fMediaType').value;
+    let finalType = 'none', finalUrl = null, finalName = '';
+
+    // Fix 1: Ensure pendingFile exists before accessing properties
+    if (typeof pendingFile !== 'undefined' && pendingFile) {
+        finalUrl = pendingFile.dataUrl;
+        finalName = pendingFile.name;
+        if (mt === 'image' || mt === 'imgurl') finalType = 'image';
+        else if (mt === 'video' || mt === 'vidurl') finalType = 'video';
+        else finalType = 'document';
+    }
+
+    const item = {
+        title: document.getElementById('fTitle').value.trim(),
+        type: document.getElementById('fType').value,
+        content: document.getElementById('fContent').value.trim(),
+        link: document.getElementById('fLink').value.trim(),
+        mediaType: finalType,
+        mediaUrl: finalUrl,
+        mediaName: finalName,
+        date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+        isImportant: document.getElementById('cbImportant').checked,
+        showMarquee: document.getElementById('cbMarquee').checked,
+    };
+
+    // Fix 2: Validation - if title or content is empty, MongoDB will reject it
+    if (!item.title || !item.content) {
+        alert("❌ Title and Content are required!");
+        return;
+    }
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item)
+        });
+
+        if (response.ok) {
+            alert('✅ News published successfully!');
+            await loadDB();  // Fix 3: Use 'await' to ensure data is fetched before rendering
+            if (typeof resetForm === 'function') resetForm();
+            
+            // Force a re-render of everything
+            renderAll(); 
+        } else {
+            const errorData = await response.json();
+            alert('❌ Server Error: ' + (errorData.message || 'Unknown error'));
+        }
+    } catch (err) {
+        console.error("Fetch error:", err);
+        alert('❌ Error connecting to backend. Is the server running?');
+    }
+}
+
+async function delNews(id) {
+    if (!confirm('Delete this news item?')) return;
+    try {
+        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            await loadDB();
+            renderAll(); // Ensure the UI updates immediately after deletion
+        }
+    } catch (e) {
+        alert('❌ Could not delete.');
+    }
+}
+/* ================================================================
+    UI HELPERS
+================================================================ */
+function x(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc4js(s) { return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function toggleContent(id) {
+    const desc = document.getElementById(`desc-${id}`);
+    const btn = document.getElementById(`btn-toggle-${id}`);
+    if (!desc) return;
+    if (!desc.classList.contains('expanded')) {
+        desc.classList.add('expanded');
+        btn.innerHTML = '✖ Close';
+        btn.style.background = "#FFC107";
+        btn.style.color = "#000";
+    } else {
+        desc.classList.remove('expanded');
+        btn.innerHTML = '📄 View More';
+        btn.style.background = "transparent";
+        btn.style.color = "";
+    }
+}
+
+function renderMgmt() {
+    const badge = document.getElementById('cntBadge');
+    if(badge) badge.textContent = DB.length;
+    const list = document.getElementById('mgmtList');
+    if(!list || !DB.length) return;
+    list.innerHTML = DB.map(n => `
+        <div class="mgmt-item ${n.isImportant ? 'imp' : ''}">
+            <div style="flex:1;min-width:0;">
+                <div class="mgmt-title">${x(n.title)}</div>
+                <div class="mgmt-meta">${n.type} • ${n.date}</div>
+            </div>
+            <button class="del-btn" onclick="delNews('${n._id}')">Delete</button>
+        </div>`).join('');
+}
+
+function onMTChange() {
+    clearMedia();
+    const t = document.getElementById('fMediaType').value;
+    document.getElementById('dropZone').style.display = (t !== 'none' && t !== 'imgurl' && t !== 'vidurl') ? 'block' : 'none';
+    document.getElementById('urlInp').style.display = (t === 'imgurl' || t === 'vidurl') ? 'block' : 'none';
+}
+
+function readFile(f) {
+    const r = new FileReader();
+    r.onload = ev => {
+        pendingFile = { dataUrl: ev.target.result, name: f.name, rawMime: f.type };
+        document.getElementById('previewStrip').style.display = 'flex';
+        document.getElementById('previewName').textContent = f.name;
+    };
+    r.readAsDataURL(f);
+}
+
+function clearMedia() {
+    pendingFile = null;
+    document.getElementById('previewStrip').style.display = 'none';
+    document.getElementById('fileInp').value = '';
+    document.getElementById('urlInp').value = '';
+}
+
+function resetForm() {
+    ['fTitle','fContent','fLink'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fMediaType').value = 'none';
+    document.getElementById('cbImportant').checked = false;
+    onMTChange();
+}
+
+function shareItem(title) {
+    if (navigator.share) navigator.share({title, url: location.href});
+    else { navigator.clipboard.writeText(location.href); alert('Link copied!'); }
 }
 
 </script>
 </body>
 </html>
 
-
-
+<footer class="site-footer">
+    <div class="marquee-hero-container">
+        <a href="latestNews.html" class="marquee-main-link">
+            <div class="marquee-labels">
+                <span class="live-tag">LIVE</span>
+                <span class="category-tag">BLOG NEWS</span>
+            </div>
+            <div id="marqueeContent" class="marquee-hero-scroll"></div>
+        </a>
+    </div>
+</footer>
 
 <footer class="main-footer">
     <div class="footer-container">

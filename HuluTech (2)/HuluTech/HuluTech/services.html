@@ -15,280 +15,6 @@
 
     <style>
         
-        /* --- THE HOVER LOGIC --- */
-        .dropdown:hover .dropdown-content {
-            display: block !important;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* THE FLOATING POSITION (Matching your About Page) */
-        .dropdown-content {
-            display: none; 
-            position: absolute;
-            background-color: transparent; 
-            min-width: 220px;
-            z-index: 1000;
-            top: 40%; 
-            left: 0;
-        }
-
-        .dropdown-content a {
-            color: white !important;
-            text-decoration: none;
-            display: block;
-            font-size: 16px;
-            background: none !important;
-            transition: color 0.3s ease;
-        }
-
-        /* "Our Story" spacing */
-        .dropdown-content a:first-child {
-            padding-bottom: 40px; 
-        }
-
-        /* "Leadership Team" spacing */
-        .dropdown-content a:last-child {
-            padding-top: 0px; 
-            margin-top: -5px;
-        }
-
-        .dropdown-content a:hover {
-            color: #ffcc00 !important; 
-        }
-
-        #nav-links {
-            display: flex;
-            align-items: center;
-        }
-        
-        /* 1. SMASH the hover text so it NEVER shows up */
-.glass-card::after, 
-.glass-card::before {
-    content: none !important;
-    display: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-}
-
-/* 2. Make the WHOLE card clickable and show the 'Hand' cursor */
-.glass-card {
-    cursor: pointer !important;
-    position: relative;
-    overflow: hidden;
-}
-
-/* 3. Stop internal text/icons from interfering with the click */
-.glass-card * {
-    pointer-events: none !important;
-}
-
-/* 4. Optional: Subtle lift so users know it's interactive */
-.glass-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1); 
-}
-/* Update the Icons to Mustard Yellow */
-.glass-card i {
-    color: #FFCC00 !important; /* Premium Mustard Yellow */
-    font-size: 3rem;
-    margin-bottom: 20px;
-    display: block;
-    /* Soft glow effect for a "designable" look */
-    filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.4)); 
-    transition: all 0.3s ease;
-}
-
-/* Hover effect to make the icon "breathe" */
-.glass-card:hover i {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 15px rgba(255, 204, 0, 0.7));
-}
-/* 1. Ensure headings don't 'trap' the link */
-.glass-card h3, .glass-card .card-title { 
-    margin-bottom: 30px !important; /* Increased space below the title */
-    display: block;
-}
-
-/* 2. Push the Learn More link further down */
-.learn-more {
-    color: #FFCC00 !important;
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    text-decoration: none;
-    
-    display: block !important; 
-    width: 100%;
-    
-    /* THE KEY CHANGE: Increase this value to push it further down */
-    margin-top: 10px !important; 
-    
-    text-align: right;
-    padding-bottom: 5px;
-}
-
-/* --- UPDATED SERVICE CARDS WITH MUSTARD BOTTOM LINE --- */
-.glass-card {
-    background: rgba(15, 23, 42, 0.7) !important;
-    backdrop-filter: blur(12px);
-    
-    /* Subtle side/top borders */
-    border: 1px solid rgba(255, 255, 255, 0.1) !important; 
-    
-    /* The thick mustard line at the bottom */
-    border-bottom: 5px solid #FFCC00 !important; 
-    
-    border-radius: 12px;
-    padding: 40px 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: all 0.3s ease;
-    overflow: hidden; /* Keeps the line within the rounded corners */
-}
-
-/* Hover effect for the line and card */
-.glass-card:hover {
-    transform: translateY(-8px);
-    border-bottom-width: 8px !important; /* Thickens the line on hover */
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Ensure the Learn More link sits nicely above the line */
-.learn-more {
-    margin-top: auto;
-    padding-top: 15px;
-    color: #FFCC00 !important;
-}/* --- COMPACT SERVCIE CARDS WITH INSET MUSTARD LINE --- */
-.glass-card {
-    background: rgba(15, 23, 42, 0.7) !important;
-    backdrop-filter: blur(12px);
-    
-    /* Subtle side/top thin border (optional, matches About page) */
-    border: 1px solid rgba(255, 255, 255, 0.1) !important; 
-    
-    /* --- THIS IS THE KEY --- */
-    /* Add a thick mustard line *inside* the box, without extending its size */
-    box-shadow: inset 0 -6px 0 0 #FFCC00 !important; 
-    
-    border-radius: 12px;
-    padding: 30px; /* Standard internal spacing */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    
-    /* Keeps everything smooth */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Hover effect *without* changing dimensions */
-.glass-card:hover {
-    transform: translateY(-5px);
-    
-    /* Slight change in the line depth or glow on hover */
-    box-shadow: inset 0 -8px 0 0 #FFCC00 !important;
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Ensure icons and text stay away from the inner line */
-.glass-card i {
-    color: #FFCC00 !important;
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-.learn-more {
-    margin-top: auto; /* Pushes the 'Learn More' up */
-    padding-top: 10px;
-    margin-bottom: 10px; /* Gives space from the inner bottom line */
-    color: #FFFFFF !important;
-}/* --- INTERNAL MUSTARD LINE ONLY --- */
-.glass-card, .info-card, .value-item, .featured-iot {
-    /* This creates the line inside the existing border */
-    /* 0 (x-axis) -5px (y-axis/thickness) 0 (blur) 0 (spread) */
-    box-shadow: inset 0 -5px 0 0 #FFCC00 !important;
-    
-    /* Ensure the line follows the existing corner radius */
-    overflow: hidden; 
-    
-    /* Optional: Ensure text doesn't sit directly on the line */
-    padding-bottom: 25px !important; 
-}
-
-/* Maintain the look for the Featured IoT banner specifically */
-.featured-iot {
-    box-shadow: inset 0 -6px 0 0 #FFCC00 !important;
-}/* --- SERVICES PAGE: INNOVATIVE DIGITAL SOLUTIONS BANNER --- */
-.featured-iot {
-    background: #0a0e1a !important; /* Solid Dark Blue */
-    padding: 60px 40px;
-    border-radius: 24px;
-    display: flex;
-    align-items: center;
-    gap: 40px;
-    margin: 40px auto;
-    max-width: 1200px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    
-    /* THE MUSTARD LINE: Even on both sides */
-    position: relative;
-    overflow: hidden;
-    box-shadow: inset 0 -10px 0 0 #FFCC00 !important;
-}
-
-/* THE TITLE: Mustard Yellow */
-.featured-iot h2 {
-    color: #FFCC00 !important;
-    font-size: 2.8rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-}
-
-/* THE DESCRIPTION: Clean White */
-.featured-iot p {
-    color: #FFFFFF !important;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    opacity: 0.9;
-}
-
-/* THE BUTTON: Dark Blue text on Mustard Yellow background */
-.btn-iot {
-    display: inline-block;
-    background: #FFCC00 !important;
-    color: #0a0e1a !important;
-    padding: 14px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    text-decoration: none;
-    margin-top: 20px;
-    transition: transform 0.3s ease;
-}
-
-.btn-iot:hover {
-    transform: scale(1.05);
-}
-
-/* Ensure the image doesn't touch the bottom yellow line */
-.iot-image img {
-    border-radius: 15px;
-    margin-bottom: 10px; 
-}
-
-/* Responsive Fix */
-@media (max-width: 992px) {
-    .featured-iot {
-        flex-direction: column;
-        text-align: center;
-    }
-}
     </style>
 </head>
 <body class="solutions-page">
@@ -494,32 +220,36 @@
   </div>
 </div>
 
-<section class="testimonials">
-    <h2>What Our Clients Say</h2>
-    <div class="testimonial-slider">
-        <div class="testimonial active">
-            <img src="images/productivity.sa.png" alt="Nkululeko Jele" class="testimonial-img">
-            <p>"Hulutech guided our organisation through a phased adoption of Microsoft Azure and Microsoft 365, helping us modernise legacy workloads while reinforcing governance and security."</p>
-            <h4>Head of ICT and Facilities, Productivity SA</h4>
-        </div>
-        <div class="testimonial">
-            <img src="images/minthoney.jpeg" alt="Gundo Kwinda" class="testimonial-img">
-            <p>"Hulutech’s consultants distinguished themselves by mapping a cloud roadmap that aligned precisely with our productivity-improvement mandate and quality framework."</p>
-            <!--h4>Head: ICT and Facilities, Mint and Honey (Pty) Ltd</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/inzaloems.png" alt="Gerrit Deyzel" class="testimonial-img">
-            <p>"Hulutech has consistently demonstrated deep technical knowledge, strong project execution, and a proactive support model tailored to our business needs."</p>
-            <!-- h4>Inzalo Enterprise Management Systems</h4 -->
-        </div>
-        <div class="testimonial">
-            <img src="images/masana_logo.jpeg" alt="Kenneth Molomo" class="testimonial-img">
-            <p>"Hulutech provides us with advanced services regarding the Microsoft cloud platform technology stack using TOGAF methodologies with committed service delivery."</p>
-            <!-- h4>Head: IT and Systems, Masana Petroleum Solutions</h4 -->
+
+<section class="testimonials-section"> <h2>What Our Clients Say</h2>
+    
+    <div class="testimonial-container-box"> <div class="testimonial-slider">
+            <div class="testimonial active">
+                <img src="images/productivity.sa.png" alt="Nkululeko Jele" class="testimonial-img">
+                <p>"Hulutech guided our organisation through a phased adoption of Microsoft Azure and Microsoft 365, helping us modernise legacy workloads while reinforcing governance and security."</p>
+                <h4>Head of ICT and Facilities, Productivity SA</h4>
+            </div>
+            
+            <div class="testimonial">
+                <img src="images/minthoney.jpeg" alt="Gundo Kwinda" class="testimonial-img">
+                <p>"Hulutech’s consultants distinguished themselves by mapping a cloud roadmap that aligned precisely with our productivity-improvement mandate and quality framework."</p>
+                <h4>Head: ICT and Facilities, Mint and Honey (Pty) Ltd</h4>
+            </div>
+
+            <div class="testimonial">
+                <img src="images/inzaloems.png" alt="Gerrit Deyzel" class="testimonial-img">
+                <p>"Hulutech has consistently demonstrated deep technical knowledge, strong project execution, and a proactive support model tailored to our business needs.."</p>
+                <h4>Inzalo Enterprise Management Systems</h4>
+            </div>
+
+            <div class="testimonial">
+                <img src="images/masana_logo.jpeg" alt="Kenneth Molomo" class="testimonial-img">
+                <p>"Hulutech provides us with advanced services regarding the Microsoft cloud platform technology stack using TOGAF methodologies with committed service delivery."</p>
+                <h4>Head: IT and Systems, Masana Petroleum Solutions</h4>
+            </div>
         </div>
     </div>
 </section>
-
 
 <footer class="main-footer">
     <div class="footer-container">

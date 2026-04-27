@@ -77,7 +77,7 @@
 </section>
 
 
-
+<!--
 <div class="admin-toggle" onclick="toggleAdmin()">⚙ Admin</div>
 
 <div class="admin-panel" id="adminPanel">
@@ -87,7 +87,8 @@
             <i class="fa-solid fa-power-off"></i> Logout
         </button>
     </div>
-
+</div>
+-->
 
   
 </div>
@@ -95,7 +96,7 @@
 <!-- NOTICE MODAL -->
 <div class="modal-overlay" id="noticeModal" onclick="modalBgClick(event)">
     <div class="modal-box">
-        <button class="modal-x" onclick="closeModal()">&times;</button>
+      <!--  <button class="modal-x" onclick="closeModal()">&times;</button>-->
         <div class="modal-category" id="mCat"></div>
         <h3 id="mTitle"></h3>
         <div class="modal-media-wrap" id="mMedia" style="display:none;"></div>
@@ -105,49 +106,76 @@
     </div>
 </div>
 
-<script>
-/* ================================================================
-   PERSISTENT DB
+<script>/* ================================================================
+    BACKEND CONFIG & DB
 ================================================================ */
+const API_URL = 'http://localhost:5000/api/news'; 
 let DB = [];
-let nid = 1;
-let pendingFile = null; // { dataUrl, name, rawMime }
+let pendingFile = null; 
 
-async function dbGet(k) {
-    if (window.storage) { try { const r = await window.storage.get(k); return r ? r.value : null; } catch(e){} }
-    return localStorage.getItem(k);
-}
-async function dbSet(k, v) {
-    if (window.storage) { try { await window.storage.set(k, v); return; } catch(e){} }
-    localStorage.setItem(k, v);
-}
+// Load data from MongoDB
 async function loadDB() {
     try {
-        const raw = await dbGet('ht_v5');
-        if (raw) { DB = JSON.parse(raw); nid = DB.length ? Math.max(...DB.map(n=>n.id)) + 1 : 1; }
-    } catch(e) { DB = []; }
-    renderAll();
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Network response was not ok');
+        DB = await response.json();
+        renderAll();
+    } catch (e) {
+        console.error("Failed to load news:", e);
+        DB = []; 
+        renderAll();
+    }
 }
-async function saveDB() { await dbSet('ht_v5', JSON.stringify(DB)); }
+
 window.addEventListener('DOMContentLoaded', loadDB);
 
 /* ================================================================
-   RENDER ALL
+    RENDER ENGINE
 ================================================================ */
 const ICONS = { announcement:'📢', update:'🔄', event:'📅', achievement:'🏆' };
 
+/* --- Updated Render All --- */
 function renderAll() {
     renderHeroNotices();
-   // renderMarquee();//
     renderNewsGrid();
     renderMgmt();
+    renderMarquee(); // <--- This was the missing link!
+}function renderMarquee() {
+    const wrap = document.getElementById('marqueeContent');
+    if (!wrap) return;
+
+    // 1. Force clear any old hardcoded text
+    wrap.innerHTML = '';
+
+    // 2. Use the live 'DB' variable instead of localStorage
+    if (!DB || DB.length === 0) {
+        wrap.innerHTML = '<span>Hulutech Achieves Level 1 B-BBEE Status | Driving Innovation Excellence</span>';
+        return;
+    }
+
+    // 3. Filter for items where showMarquee is true
+    // We check for both boolean true and string "true" to be safe
+    const mqItems = DB.filter(n => n.showMarquee === true || String(n.showMarquee) === 'true');
+
+    if (mqItems.length > 0) {
+        // 4. Build the ticker string
+        const tickerText = mqItems.map(n => 
+            `<span class="mq-item"><span class="mq-star">⭐</span> ${x(n.title).toUpperCase()}</span>`
+        ).join('    | ');
+
+        // 5. Inject with duplicated spans for the infinite scroll effect
+        wrap.innerHTML = `<span>${tickerText}</span><span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;${tickerText}</span>`;
+    } else {
+        // Fallback if no news items have "Show in Marquee" checked
+        wrap.innerHTML = '<span>Hulutech Achieves Level 1 B-BBEE Status | Driving Innovation Excellence</span>';
+    }
 }
 
-/* --- Hero important notices --- */
 function renderHeroNotices() {
     const wrap = document.getElementById('heroNotices');
+    if(!wrap) return;
     wrap.innerHTML = '';
-    const imp = DB.filter(n => n.isImportant);
+    const imp = DB.filter(n => n.isImportant).slice(0, 3);
     if (!imp.length) return;
     imp.forEach((n, i) => {
         const el = document.createElement('div');
@@ -168,145 +196,74 @@ function renderHeroNotices() {
         wrap.appendChild(el);
     });
 }
-
-/* --- Marquee --- */
-/*
-function renderMarquee() {
-    const bar  = document.getElementById('marqueeBar');
-    const text = document.getElementById('marqueeText');
-    const items = DB.filter(n => n.showMarquee);
-    if (items.length) {
-        text.textContent = items.map(n => `⭐ ${n.title}`).join('   •   ');
-        bar.style.display = 'block';
-    } else { bar.style.display = 'none'; }
-}*/
-
-/* --- News grid (non-important items) --- */
-/* --- News grid (non-important items) --- */
 function renderNewsGrid() {
     const grid = document.getElementById('newsGrid');
-    const regular = DB.filter(n => !n.isImportant);
+    if(!grid) return;
+    
+    // We are now using all items from the database
+    const allNews = DB; 
+    
     grid.innerHTML = '';
     
-    if (!regular.length) {
-        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news yet !</p>';
+    if (!allNews.length) {
+        grid.innerHTML = '<p style="text-align:center;grid-column:1/-1;opacity:.5;padding:4rem 0;">No news stories found.</p>';
         return;
     }
-    
-    regular.forEach(n => {
+
+    // FIXED: Changed "regular.forEach" to "allNews.forEach"
+    allNews.forEach(n => {
         const card = document.createElement('div');
         card.className = 'news-card';
-
-        // --- PUT THE UPDATED CODE RIGHT HERE ---
         card.innerHTML = buildCardMediaHTML(n) + `
             <div class="card-body">
                 <span class="card-type">${x(n.type)}</span>
                 <div class="card-title">${x(n.title)}</div>
-                
-                <div id="desc-${n.id}" class="card-desc">${x(n.content)}</div>
-                
+                <div id="desc-${n._id}" class="card-desc">${x(n.content)}</div>
                 <div class="card-date">${n.date}</div>
                 <div class="card-actions">
                     ${buildCardBtns(n)} 
-                    </div>
+                </div>
             </div>`;
-        
         grid.appendChild(card);
     });
 }
+/* --- Card Helpers --- */
 function buildCardMediaHTML(n) {
     if (n.mediaType === 'none' || !n.mediaUrl) return '';
     if (n.mediaType === 'image') {
-        return `<div class="card-media">
-            <img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')">
-        </div>`;
+        return `<div class="card-media"><img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')"></div>`;
     }
     if (n.mediaType === 'video') {
-        return `<div class="card-media">
-            <video controls preload="metadata" src="${n.mediaUrl}"></video>
-        </div>`;
+        return `<div class="card-media"><video controls preload="metadata" src="${n.mediaUrl}"></video></div>`;
     }
     if (n.mediaType === 'document') {
-        return `<div class="card-media">
-            <div class="card-doc">
-                <div class="card-doc-icon">📄</div>
-                <div class="card-doc-name">${x(n.mediaName || 'Document')}</div>
-            </div>
-            <div id="view-container-${n.id}" style="display:none; width:100%; max-width:900px; margin: 25px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
-                <div style="background: #1a1a1a; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #FFC107;">
-                    <div style="display: flex; align-items:center; gap: 8px;">
-                        <span style="background: #FFC107; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 12px;">PDF</span>
-                        <span style="color: #eee; font-size: 13px; font-weight: 500; letter-spacing: 0.5px;">DOCUMENT PREVIEW</span>
-                    </div>
-                    <div style="font-size: 11px; color: #888; text-transform: uppercase;">Secure Viewer</div>
-                </div>
-                <div style="position: relative; background: #525659; height: 600px;">
-                    <iframe name="pdf-frame-${n.id}" width="100%" height="100%" style="border:none; display: block;"></iframe>
-                </div>
-            </div>
-        </div>`;
+        return `<div class="card-media"><div class="card-doc"><div class="card-doc-icon">📄</div><div class="card-doc-name">${x(n.mediaName || 'Document')}</div></div></div>`;
     }
     return '';
 }
 
 function buildCardBtns(n) {
     let b = '';
-    
-    // 1. Primary Action (Link)
+    const id = n._id; 
     if (n.link) b += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="ca-btn ca-primary">Read More →</a>`;
-    
-    // 2. Media Actions
-    if (n.mediaType === 'image' && n.mediaUrl)
-        b += `<button class="ca-btn ca-ghost" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 Full Image</button>`;
-    
-    if (n.mediaType === 'video' && n.mediaUrl)
-        b += `<button class="ca-btn ca-cyan" onclick="this.closest('.news-card').querySelector('video').play()">▶ Play</button>`;
-    
-    if (n.mediaType === 'document' && n.mediaUrl) {
-        b += `<a href="${n.mediaUrl}" target="_blank" download="${x(n.mediaName||'file')}" class="ca-btn ca-ghost">⬇ Download</a>`;
-        b += `<a href="${n.mediaUrl}" target="pdf-frame-${n.id}" onclick="toggleViewer(this, '${n.mediaUrl}', ${n.id})" class="ca-btn ca-ghost">👁 view</a>`;
-    }
-
-    // 3. Standard Actions (Always Shown)
+    if (n.mediaType === 'image' && n.mediaUrl) b += `<button class="ca-btn ca-ghost" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 Full Image</button>`;
+    if (n.mediaType === 'document' && n.mediaUrl) b += `<a href="${n.mediaUrl}" target="_blank" download="${x(n.mediaName||'file')}" class="ca-btn ca-ghost">⬇ Download</a>`;
     b += `<button class="ca-btn ca-ghost" onclick="shareItem('${esc4js(n.title)}')">🔗 Share</button>`;
-    
-    // 4. THE VIEW MORE BUTTON (Added here)
-    b += `<button class="ca-btn ca-ghost" id="btn-toggle-${n.id}" onclick="toggleContent(${n.id})">📄 View More</button>`;
-    
+    b += `<button class="ca-btn ca-ghost" id="btn-toggle-${id}" onclick="toggleContent('${id}')">📄 View More</button>`;
     return b;
 }
 
-/* --- Manage list --- */
-function renderMgmt() {
-    document.getElementById('cntBadge').textContent = DB.length;
-    const list = document.getElementById('mgmtList');
-    if (!DB.length) { list.innerHTML = '<p style="opacity:.5;font-size:.9rem;">Nothing published yet.</p>'; return; }
-    list.innerHTML = DB.map(n => `
-        <div class="mgmt-item ${n.isImportant ? 'imp' : ''}">
-            <div style="flex:1;min-width:0;">
-                <div class="mgmt-title">${x(n.title)}</div>
-                <div class="mgmt-meta">${n.type} • ${n.date}${n.mediaType !== 'none' ? ' • ' + n.mediaType : ''}</div>
-                <div class="mgmt-tags">
-                    ${n.isImportant  ? '<span class="mtag mtag-y">⚠ Homepage</span>' : ''}
-                    ${n.showMarquee  ? '<span class="mtag mtag-c">⭐ Marquee</span>' : ''}
-                    ${n.mediaType !== 'none' ? `<span class="mtag mtag-g">${mEmoji(n.mediaType)} ${n.mediaType}</span>` : ''}
-                </div>
-            </div>
-            <button class="del-btn" onclick="delNews(${n.id})">Delete</button>
-        </div>`).join('');
-}
-const mEmoji = t => t==='image'?'🖼':t==='video'?'🎬':'📄';
-
 /* ================================================================
-   ADD / DELETE
-================================================================ */
-function addNews(e) {
-    e.preventDefault();
+    CREATE / DELETE (MONGODB API)
+================================================================ */async function addNews(e) {
+    if (e) e.preventDefault();
+    
     const mt = document.getElementById('fMediaType').value;
     let finalType = 'none', finalUrl = null, finalName = '';
 
-    if (pendingFile) {
-        finalUrl  = pendingFile.dataUrl;
+    // Fix 1: Ensure pendingFile exists before accessing properties
+    if (typeof pendingFile !== 'undefined' && pendingFile) {
+        finalUrl = pendingFile.dataUrl;
         finalName = pendingFile.name;
         if (mt === 'image' || mt === 'imgurl') finalType = 'image';
         else if (mt === 'video' || mt === 'vidurl') finalType = 'video';
@@ -314,220 +271,70 @@ function addNews(e) {
     }
 
     const item = {
-        id: nid++,
-        title:       document.getElementById('fTitle').value.trim(),
-        type:        document.getElementById('fType').value,
-        content:     document.getElementById('fContent').value.trim(),
-        link:        document.getElementById('fLink').value.trim(),
-        mediaType:   finalType,
-        mediaUrl:    finalUrl,
-        mediaName:   finalName,
-        date:        new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
+        title: document.getElementById('fTitle').value.trim(),
+        type: document.getElementById('fType').value,
+        content: document.getElementById('fContent').value.trim(),
+        link: document.getElementById('fLink').value.trim(),
+        mediaType: finalType,
+        mediaUrl: finalUrl,
+        mediaName: finalName,
+        date: new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
         isImportant: document.getElementById('cbImportant').checked,
         showMarquee: document.getElementById('cbMarquee').checked,
     };
 
-    DB.unshift(item);
-    saveDB();
-    renderAll();
-    resetForm();
-    alert('✅ News published successfully!');
+    // Fix 2: Validation - if title or content is empty, MongoDB will reject it
+    if (!item.title || !item.content) {
+        alert("❌ Title and Content are required!");
+        return;
+    }
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item)
+        });
+
+        if (response.ok) {
+            alert('✅ News published successfully!');
+            await loadDB();  // Fix 3: Use 'await' to ensure data is fetched before rendering
+            if (typeof resetForm === 'function') resetForm();
+            
+            // Force a re-render of everything
+            renderAll(); 
+        } else {
+            const errorData = await response.json();
+            alert('❌ Server Error: ' + (errorData.message || 'Unknown error'));
+        }
+    } catch (err) {
+        console.error("Fetch error:", err);
+        alert('❌ Error connecting to backend. Is the server running?');
+    }
 }
 
 async function delNews(id) {
     if (!confirm('Delete this news item?')) return;
-    DB = DB.filter(n => n.id !== id);
-    await saveDB();
-    renderAll();
-}
-
-function resetForm() {
-    ['fTitle','fContent','fLink'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('fType').value = '';
-    document.getElementById('fMediaType').value = 'none';
-    document.getElementById('cbImportant').checked = false;
-    document.getElementById('cbMarquee').checked = false;
-    document.getElementById('dropZone').style.display = 'none';
-    document.getElementById('urlInp').style.display = 'none';
-    clearMedia();
-}
-
-/* ================================================================
-   MEDIA HANDLING
-================================================================ */
-function onMTChange() {
-    clearMedia();
-    const t   = document.getElementById('fMediaType').value;
-    const dz  = document.getElementById('dropZone');
-    const ui  = document.getElementById('urlInp');
-    const ico = document.getElementById('dzIcon');
-    const hint= document.getElementById('dzHint');
-    const inp = document.getElementById('fileInp');
-    dz.style.display = 'none';
-    ui.style.display = 'none';
-    if (t === 'image')    { dz.style.display='block'; ico.textContent='🖼️'; hint.textContent='PNG, JPG, GIF, WebP, SVG'; inp.accept='image/*'; }
-    if (t === 'video')    { dz.style.display='block'; ico.textContent='🎬'; hint.textContent='MP4, WebM, MOV, OGG'; inp.accept='video/*'; }
-    if (t === 'document') { dz.style.display='block'; ico.textContent='📄'; hint.textContent='PDF, DOCX, DOC, XLSX, PPTX, TXT'; inp.accept='.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt'; }
-    if (t === 'imgurl' || t === 'vidurl') { ui.style.display='block'; }
-}
-
-function onFilePick(e) {
-    const f = e.target.files[0]; if (!f) return;
-    readFile(f);
-}
-function onDragOver(e)  { e.preventDefault(); document.getElementById('dropZone').classList.add('over'); }
-function onDragLeave()  { document.getElementById('dropZone').classList.remove('over'); }
-function onFileDrop(e)  { e.preventDefault(); document.getElementById('dropZone').classList.remove('over'); const f=e.dataTransfer.files[0]; if(f) readFile(f); }
-function readFile(f) {
-    const r = new FileReader();
-    r.onload = ev => {
-        pendingFile = { dataUrl: ev.target.result, name: f.name, rawMime: f.type };
-        showPreview(f.name, ev.target.result, f.type);
-    };
-    r.readAsDataURL(f);
-}
-function onUrlType() {
-    const url = document.getElementById('urlInp').value.trim();
-    if (!url) { pendingFile = null; document.getElementById('previewStrip').style.display='none'; return; }
-    const t   = document.getElementById('fMediaType').value;
-    pendingFile = { dataUrl: url, name: url.split('/').pop() || url, rawMime: t==='imgurl'?'image/jpeg':'' };
-    showPreview(pendingFile.name, url, pendingFile.rawMime);
-}
-function showPreview(name, src, mime) {
-    const strip = document.getElementById('previewStrip');
-    const thumb = document.getElementById('previewThumb');
-    document.getElementById('previewName').textContent = name;
-    strip.style.display = 'flex';
-    if (mime && mime.startsWith('image')) {
-        thumb.innerHTML = `<img class="preview-thumb" src="${src}" alt="preview">`;
-    } else if (mime && mime.startsWith('video')) {
-        thumb.innerHTML = `<div class="preview-thumb-icon">🎬</div>`;
-    } else {
-        thumb.innerHTML = `<div class="preview-thumb-icon">📄</div>`;
+    try {
+        const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            await loadDB();
+            renderAll(); // Ensure the UI updates immediately after deletion
+        }
+    } catch (e) {
+        alert('❌ Could not delete.');
     }
 }
-function clearMedia() {
-    pendingFile = null;
-    document.getElementById('previewStrip').style.display = 'none';
-    document.getElementById('previewThumb').innerHTML = '';
-    document.getElementById('fileInp').value = '';
-    document.getElementById('urlInp').value = '';
-}
-
 /* ================================================================
-   NOTICE MODAL
+    UI HELPERS
 ================================================================ */
-function openModal(n) {
-    document.getElementById('mCat').innerHTML  = `${ICONS[n.type]||'⚠️'} Important Notice`;
-    document.getElementById('mTitle').textContent = n.title;
-    document.getElementById('mBody').textContent  = n.content;
-    document.getElementById('mDate').textContent  = n.date;
-
-    const mm = document.getElementById('mMedia');
-    mm.style.display = 'none'; mm.innerHTML = '';
-    if (n.mediaType === 'image' && n.mediaUrl) {
-        mm.style.display = 'block';
-        mm.innerHTML = `<img src="${n.mediaUrl}" alt="${x(n.title)}" onclick="openFS('${esc4js(n.mediaUrl)}')">`;
-    } else if (n.mediaType === 'video' && n.mediaUrl) {
-        mm.style.display = 'block';
-        mm.innerHTML = `<video controls src="${n.mediaUrl}" style="width:100%;border-radius:12px;"></video>`;
-    } else if (n.mediaType === 'document' && n.mediaUrl) {
-        mm.style.display = 'block';
-        mm.innerHTML = `<div class="modal-doc-row">
-            <span>📄</span>
-            <div><strong>${x(n.mediaName||'Document')}</strong>
-            <a href="${n.mediaUrl}" target="_blank" download class="mbtn mbtn-yellow" style="margin-top:.5rem;display:inline-block;font-size:.8rem;padding:.45rem 1rem;">⬇ Download</a></div>
-        </div>`;
-    }
-
-    const btns = document.getElementById('mBtns');
-    btns.innerHTML = '';
-    if (n.link) btns.innerHTML += `<a href="${x(n.link)}" target="_blank" rel="noopener" class="mbtn mbtn-yellow">Read More →</a>`;
-    if (n.mediaType === 'image' && n.mediaUrl)
-        btns.innerHTML += `<button class="mbtn mbtn-accent" onclick="openFS('${esc4js(n.mediaUrl)}')">🔍 View Full Image</button>`;
-    btns.innerHTML += `<button class="mbtn mbtn-ghost" onclick="closeModal()">Dismiss</button>`;
-
-    document.getElementById('noticeModal').classList.add('open');
-}
-function closeModal() { document.getElementById('noticeModal').classList.remove('open'); }
-function modalBgClick(e) { if (e.target === document.getElementById('noticeModal')) closeModal(); }
-
-
-/* ================================================================
-   UI HELPERS
-================================================================ */
-function toggleMenu()  { document.getElementById('navMenu').classList.toggle('active'); }
-function toggleAdmin() { document.getElementById('adminPanel').classList.toggle('active'); }
-function toggleCheck(id) { document.getElementById(id).checked = !document.getElementById(id).checked; }
-function gotoContact() { document.querySelector('#contact').scrollIntoView({behavior:'smooth',block:'start'}); }
-function handleContact(e) { e.preventDefault(); alert('Thank you for your message! We will get back to you soon.'); e.target.reset(); }
-function shareItem(title) {
-    if (navigator.share) navigator.share({title, url: location.href});
-    else navigator.clipboard.writeText(location.href).then(() => alert('Link copied to clipboard!'));
-}
-
-function switchTab(e, id) {
-    document.querySelectorAll('.apane').forEach(p => p.classList.remove('on'));
-    document.querySelectorAll('.atab').forEach(t => t.classList.remove('on'));
-    document.getElementById(id).classList.add('on');
-    e.currentTarget.classList.add('on');
-}
-
-/* safe escape helpers */
-function x(s) {
-    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function x(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function esc4js(s) { return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 
-/* smooth scroll for nav links */
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-        e.preventDefault();
-        const t = document.querySelector(a.getAttribute('href'));
-        if (t) t.scrollIntoView({behavior:'smooth',block:'start'});
-        document.getElementById('navMenu').classList.remove('active');
-    });
-});
-
-/* keyboard ESC closes overlays */
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-        closeModal();
-        closeFS();
-    }
-});
 function toggleContent(id) {
     const desc = document.getElementById(`desc-${id}`);
     const btn = document.getElementById(`btn-toggle-${id}`);
-    const card = btn.closest('.news-card');
-    
-    // Check if we are opening or closing
-    const isOpening = !desc.classList.contains('expanded');
-
-    if (isOpening) {
-        // OPEN: Add class and update button
-        desc.classList.add('expanded');
-        btn.innerHTML = '✖ Close';
-        btn.classList.add('btn-active-view');
-        
-        // Optional: Smooth scroll into the new text
-        setTimeout(() => {
-            desc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 50);
-    } else {
-        // CLOSE: Remove class and update button
-        desc.classList.remove('expanded');
-        btn.innerHTML = '👁 View More';
-        btn.classList.remove('btn-active-view');
-        
-        // SCROLL: Jump back to the top of the card
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}function toggleContent(id) {
-    const desc = document.getElementById(`desc-${id}`);
-    const btn = document.getElementById(`btn-toggle-${id}`);
-    const card = btn.closest('.news-card');
-    
+    if (!desc) return;
     if (!desc.classList.contains('expanded')) {
         desc.classList.add('expanded');
         btn.innerHTML = '✖ Close';
@@ -538,8 +345,58 @@ function toggleContent(id) {
         btn.innerHTML = '📄 View More';
         btn.style.background = "transparent";
         btn.style.color = "";
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+function renderMgmt() {
+    const badge = document.getElementById('cntBadge');
+    if(badge) badge.textContent = DB.length;
+    const list = document.getElementById('mgmtList');
+    if(!list || !DB.length) return;
+    list.innerHTML = DB.map(n => `
+        <div class="mgmt-item ${n.isImportant ? 'imp' : ''}">
+            <div style="flex:1;min-width:0;">
+                <div class="mgmt-title">${x(n.title)}</div>
+                <div class="mgmt-meta">${n.type} • ${n.date}</div>
+            </div>
+            <button class="del-btn" onclick="delNews('${n._id}')">Delete</button>
+        </div>`).join('');
+}
+
+function onMTChange() {
+    clearMedia();
+    const t = document.getElementById('fMediaType').value;
+    document.getElementById('dropZone').style.display = (t !== 'none' && t !== 'imgurl' && t !== 'vidurl') ? 'block' : 'none';
+    document.getElementById('urlInp').style.display = (t === 'imgurl' || t === 'vidurl') ? 'block' : 'none';
+}
+
+function readFile(f) {
+    const r = new FileReader();
+    r.onload = ev => {
+        pendingFile = { dataUrl: ev.target.result, name: f.name, rawMime: f.type };
+        document.getElementById('previewStrip').style.display = 'flex';
+        document.getElementById('previewName').textContent = f.name;
+    };
+    r.readAsDataURL(f);
+}
+
+function clearMedia() {
+    pendingFile = null;
+    document.getElementById('previewStrip').style.display = 'none';
+    document.getElementById('fileInp').value = '';
+    document.getElementById('urlInp').value = '';
+}
+
+function resetForm() {
+    ['fTitle','fContent','fLink'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('fMediaType').value = 'none';
+    document.getElementById('cbImportant').checked = false;
+    onMTChange();
+}
+
+function shareItem(title) {
+    if (navigator.share) navigator.share({title, url: location.href});
+    else { navigator.clipboard.writeText(location.href); alert('Link copied!'); }
 }
 </script>
 </body>

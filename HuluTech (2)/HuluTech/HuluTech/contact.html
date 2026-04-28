@@ -225,7 +225,7 @@
 
             try {
                 // --- TASK A: Save to your HULUTECH MongoDB Database ---
-                const dbPromise = fetch('http://localhost:5000/api/contact/submit', {
+                const dbPromise = fetch('https://hulutech-backend.onrender.com/contact/submit', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataObject)

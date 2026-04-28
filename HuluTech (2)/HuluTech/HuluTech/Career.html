@@ -243,7 +243,7 @@ form.addEventListener('submit', async function(e) {
     try {
         // --- STEP 1: SEND TO YOUR BACKEND (Saves CV to MongoDB & Uploads folder) ---
         // This is the most important part for your Data Analytics project!
-        const backendResponse = await fetch('http://localhost:5000/api/career/apply', {
+        const backendResponse = await fetch('https://hulutech-backend.onrender.com/career/apply', { 
             method: 'POST',
             body: formData 
         });

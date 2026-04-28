@@ -250,7 +250,7 @@
 
         try {
             // --- OPTION 1: SEND TO YOUR MONGODB BACKEND (Includes File) ---
-            const backendResponse = await fetch('http://localhost:5000/api/partnership/apply', {
+            const backendResponse = await fetch('https://hulutech-backend.onrender.com/partnership/apply', {
                 method: 'POST',
                 body: formData // Sending FormData directly handles the file
             });

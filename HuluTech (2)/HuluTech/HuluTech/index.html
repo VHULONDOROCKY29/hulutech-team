@@ -68,10 +68,11 @@ style="background-image: linear-gradient(rgba(4,14,35,0.25), rgba(4,14,35,0.25))
 
   <div class="max-w-3xl animate-slide-in">
 
-  <a href="LatestNews.html" 
-   id="heroNotices" 
-   class="mt-4 w-full max-w-4xl mx-auto block cursor-pointer">
+  <a href="/LatestNews.html" id="heroNotices" class="mt-4 w-full max-w-4xl mx-auto block cursor-pointer">
+   <!-- The marquee will be injected here by JS -->
 </a>
+
+
 
     <h1 class="text-3xl md:text-5xl font-extrabold leading-tight text-white mb-6">
        We help businesses stay secure, innovative, and future‑proof.
@@ -236,11 +237,8 @@ function renderAll() {
 function renderHeroNotices() {
     const wrap = document.getElementById('heroNotices');
     if(!wrap) return;
-
-    // We keep this to clear old data, but it won't break the link 
-    // as long as the content stays inside the <a> tag
-    wrap.innerHTML = ''; 
-
+    
+    wrap.innerHTML = '';
     const imp = DB.filter(n => n.isImportant).slice(0, 3);
     if (!imp.length) return;
 
@@ -248,21 +246,23 @@ function renderHeroNotices() {
         const el = document.createElement('div');
         el.className = 'hero-notice';
         el.style.animationDelay = (0.7 + i * 0.1) + 's';
+        
+        // We add "pointer-events: none" to the inner text 
+        // so the click definitely hits the <a> tag
         el.innerHTML = `
-            <div class="n-icon">${ICONS[n.type] || '⚠️'}</div>
-            <div class="n-body">
+            <div class="n-icon" style="pointer-events: none;">${ICONS[n.type] || '⚠️'}</div>
+            <div class="n-body" style="pointer-events: none;">
                 <div class="n-badge"><span class="n-dot"></span> Important Notice</div>
                 <div class="n-title">${x(n.title)}</div>
                 <div class="n-excerpt">${x(n.content)}</div>
             </div>
-            <div class="n-meta">
+            <div class="n-meta" style="pointer-events: none;">
                 <span class="n-chip">${x(n.type)}</span>
                 <span class="n-date">${n.date}</span>
             </div>`;
-
-        // --- THE FIX IS HERE ---
-        // We REMOVE the el.addEventListener('click', () => openModal(n));
-        // This allows the <a href="LatestNews.html"> in your HTML to work!
+        
+        // REMOVE the el.addEventListener('click', () => openModal(n));
+        // Keeping it empty allows the <a> tag's href to work.
         
         wrap.appendChild(el);
     });

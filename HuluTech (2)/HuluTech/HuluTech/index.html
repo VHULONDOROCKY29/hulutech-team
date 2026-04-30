@@ -236,9 +236,14 @@ function renderAll() {
 function renderHeroNotices() {
     const wrap = document.getElementById('heroNotices');
     if(!wrap) return;
-    wrap.innerHTML = '';
+
+    // We keep this to clear old data, but it won't break the link 
+    // as long as the content stays inside the <a> tag
+    wrap.innerHTML = ''; 
+
     const imp = DB.filter(n => n.isImportant).slice(0, 3);
     if (!imp.length) return;
+
     imp.forEach((n, i) => {
         const el = document.createElement('div');
         el.className = 'hero-notice';
@@ -254,7 +259,11 @@ function renderHeroNotices() {
                 <span class="n-chip">${x(n.type)}</span>
                 <span class="n-date">${n.date}</span>
             </div>`;
-        el.addEventListener('click', () => openModal(n));
+
+        // --- THE FIX IS HERE ---
+        // We REMOVE the el.addEventListener('click', () => openModal(n));
+        // This allows the <a href="LatestNews.html"> in your HTML to work!
+        
         wrap.appendChild(el);
     });
 }
